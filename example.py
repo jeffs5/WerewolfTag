@@ -20,6 +20,9 @@ class Player(object):
         if dy != 0:
             self.move_single_axis(0, dy)
     
+    def getScore(self):
+        return int(self.playerNumber)
+
     def move_single_axis(self, dx, dy):
         
         # Move the rect
@@ -43,6 +46,8 @@ class Player(object):
                     if self.rect.colliderect(player.rect):
                         raise SystemExit, "You tagged " + str(self.playerNumber)
 
+        self.playerNumber += 1
+
 # Initialise pygame
 os.environ["SDL_VIDEO_CENTERED"] = "1"
 pygame.init()
@@ -57,6 +62,7 @@ players = []
 player = Player(32, 32, 1) # Create the player
 player2 = Player(64, 64, 2)
 
+myfont = pygame.font.SysFont("monospace", 16)
 
 running = True
 FRAMERATE = 60
@@ -82,9 +88,6 @@ while running:
     if key[pygame.K_DOWN]:
         player.move(0, 2)
 
-    # Move the player if an arrow key is pressed
-    key = pygame.key.get_pressed()
-
     if key[pygame.K_a]:
         player2.move(-2, 0)
     if key[pygame.K_d]:
@@ -98,4 +101,11 @@ while running:
     screen.fill((0, 0, 0))
     pygame.draw.rect(screen, (255, 200, 0), player.rect)
     pygame.draw.rect(screen, (255, 200, 255), player2.rect)
+   
+    disclaimertext = myfont.render("Player 1 score: {0}".format(player.getScore()) , 1, (255,255,255))
+    disclaimertext2 = myfont.render("Player 2 score: {0}".format(player2.getScore()) , 1, (255,255,255))
+    screen.blit(disclaimertext, (16, 400))
+    screen.blit(disclaimertext2, (16, 410))
+
     pygame.display.flip()
+    
