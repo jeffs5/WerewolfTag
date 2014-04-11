@@ -6,15 +6,12 @@ import pygame
 
 # Class for the orange dude
 class Player(object):
-<<<<<<< HEAD
 
 
     def __init__(self, x, y, value):
         self.playerNumber = value
         players.append(self)
         self.rect = pygame.Rect(x, y, 16, 16)
-
->>>>>>> FETCH_HEAD
 
     def move(self, dx, dy):
         
@@ -66,12 +63,12 @@ screen = pygame.display.set_mode((640, 440))
 
 clock = pygame.time.Clock()
 walls = [] # List to hold the walls
-<<<<<<< HEAD
+
 players = []
 player = Player(32, 32, 1) # Create the player
 player2 = Player(64, 64, 2)
 
->>>>>>> FETCH_HEAD
+
 # Holds the level layout in a list of strings.
 #level = [
 #"WWWWWWWWWWWWWWWWWWWW",
@@ -155,10 +152,9 @@ while running:
     if key[pygame.K_DOWN]:
         player.move(0, 2)
 
-<<<<<<< HEAD
     # Move the player if an arrow key is pressed
     key = pygame.key.get_pressed()
->>>>>>> FETCH_HEAD
+
     if key[pygame.K_a]:
         player2.move(-2, 0)
     if key[pygame.K_d]:
@@ -181,7 +177,5 @@ while running:
         pygame.draw.rect(screen, (255, 255, 255), wall.rect)
     pygame.draw.rect(screen, (255, 0, 0), end_rect)
     pygame.draw.rect(screen, (255, 200, 0), player.rect)
-<<<<<<< HEAD
     pygame.draw.rect(screen, (255, 200, 255), player2.rect)
->>>>>>> FETCH_HEAD
     pygame.display.flip()
