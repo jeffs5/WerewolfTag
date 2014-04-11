@@ -7,7 +7,6 @@ import pygame
 # Class for the orange dude
 class Player(object):
 
-
     def __init__(self, x, y, value):
         self.playerNumber = value
         players.append(self)
@@ -28,30 +27,21 @@ class Player(object):
         self.rect.y += dy
 
         # If you collide with a wall, move out based on velocity
-        for wall in walls:
-            if self.rect.colliderect(wall.rect):
+        for border in borders:
+            if self.rect.colliderect(border):
                 if dx > 0: # Moving right; Hit the left side of the wall
-                    self.rect.right = wall.rect.left
+                    self.rect.right = border.left
                 if dx < 0: # Moving left; Hit the right side of the wall
-                    self.rect.left = wall.rect.right
+                    self.rect.left = border.right
                 if dy > 0: # Moving down; Hit the top side of the wall
-                    self.rect.bottom = wall.rect.top
+                    self.rect.bottom = border.top
                 if dy < 0: # Moving up; Hit the bottom side of the wall
-                    self.rect.top = wall.rect.bottom
+                    self.rect.top = border.bottom
 
         for player in players:
                 if self != player:
                     if self.rect.colliderect(player.rect):
                         raise SystemExit, "You tagged " + str(self.playerNumber)
-
-
-
-# Nice class to hold a wall rect
-class Wall(object):
-    
-    def __init__(self, pos):
-        walls.append(self)
-        self.rect = pygame.Rect(pos[0], pos[1], 16, 16)
 
 # Initialise pygame
 os.environ["SDL_VIDEO_CENTERED"] = "1"
@@ -61,79 +51,15 @@ pygame.init()
 pygame.display.set_caption("Get to the red square!")
 screen = pygame.display.set_mode((640, 440))
 
-clock = pygame.time.Clock()
-walls = [] # List to hold the walls
+borders = [pygame.Rect(0,0, 640, 1), pygame.Rect(0,0, 1, 440), pygame.Rect(639,0, 1, 440), pygame.Rect(0,439, 640, 1)]
 
 players = []
 player = Player(32, 32, 1) # Create the player
 player2 = Player(64, 64, 2)
 
 
-# Holds the level layout in a list of strings.
-#level = [
-#"WWWWWWWWWWWWWWWWWWWW",
-#"W                  W",
-#"W         WWWWWW   W",
-#"W   WWWW       W   W",
-#"W   W        WWWW  W",
-#"W WWW  WWWW        W",
-#"W   W     W W      W",
-#"W   W     W   WWW WW",
-#"W   WWW WWW   W W  W",
-#"W     W   W   W W  W",
-#"WWW   W   WWWWW W  W",
-#"W W      WW        W",
-#"W W   WWWW   WWW   W",
-#"W     W    E   W   W",
-#"WWWWWWWWWWWWWWWWWWWW",
-#]
-
-level = [
-"WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
-"W                                W",
-"W                                W",
-"W                                W",
-"W                                W",
-"W                                W",
-"W                                W",
-"W                                W",
-"W                                W",
-"W                                W",
-"W                                W",
-"W                                W",
-"W                                W",
-"W          E                     W",
-"W                                W",
-"W                                W",
-"W                                W",
-"W                                W",
-"W                                W",
-"W                                W",
-"W                                W",
-"W                                W",
-"W                                W",
-"W                                W",
-"W                                W",
-"W                                W",
-"WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
-]
-
-# Parse the level string above. W = wall, E = exit
-x = y = 0
-for row in level:
-    for col in row:
-        if col == "W":
-            Wall((x, y))
-        if col == "E":
-            end_rect = pygame.Rect(x, y, 16, 16)
-        x += 16
-    y += 16
-    x = 0
-
 running = True
 while running:
-    
-    clock.tick(60)
     
     for e in pygame.event.get():
         if e.type == pygame.QUIT:
@@ -164,18 +90,8 @@ while running:
     if key[pygame.K_s]:
         player2.move(0, 2)
     
-    # Just added this to make it slightly fun ;)
-    if player.rect.colliderect(end_rect):
-        raise SystemExit, "Player 1: You win!"
-
-    if player2.rect.colliderect(end_rect):
-        raise SystemExit, "Player 2: You win!"
-    
     # Draw the scene
     screen.fill((0, 0, 0))
-    for wall in walls:
-        pygame.draw.rect(screen, (255, 255, 255), wall.rect)
-    pygame.draw.rect(screen, (255, 0, 0), end_rect)
     pygame.draw.rect(screen, (255, 200, 0), player.rect)
     pygame.draw.rect(screen, (255, 200, 255), player2.rect)
     pygame.display.flip()
