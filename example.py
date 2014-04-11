@@ -59,7 +59,11 @@ player2 = Player(64, 64, 2)
 
 
 running = True
+FRAMERATE = 60
+clock = pygame.time.Clock()
+
 while running:
+    clock.tick(FRAMERATE)
     
     for e in pygame.event.get():
         if e.type == pygame.QUIT:
