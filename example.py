@@ -6,12 +6,15 @@ import pygame
 
 # Class for the orange dude
 class Player(object):
+<<<<<<< HEAD
 
 
     def __init__(self, x, y, value):
         self.playerNumber = value
         players.append(self)
         self.rect = pygame.Rect(x, y, 16, 16)
+
+>>>>>>> FETCH_HEAD
 
     def move(self, dx, dy):
         
@@ -59,30 +62,63 @@ pygame.init()
 
 # Set up the display
 pygame.display.set_caption("Get to the red square!")
-screen = pygame.display.set_mode((320, 240))
+screen = pygame.display.set_mode((640, 440))
 
 clock = pygame.time.Clock()
 walls = [] # List to hold the walls
+<<<<<<< HEAD
 players = []
 player = Player(32, 32, 1) # Create the player
 player2 = Player(64, 64, 2)
+
+>>>>>>> FETCH_HEAD
 # Holds the level layout in a list of strings.
+#level = [
+#"WWWWWWWWWWWWWWWWWWWW",
+#"W                  W",
+#"W         WWWWWW   W",
+#"W   WWWW       W   W",
+#"W   W        WWWW  W",
+#"W WWW  WWWW        W",
+#"W   W     W W      W",
+#"W   W     W   WWW WW",
+#"W   WWW WWW   W W  W",
+#"W     W   W   W W  W",
+#"WWW   W   WWWWW W  W",
+#"W W      WW        W",
+#"W W   WWWW   WWW   W",
+#"W     W    E   W   W",
+#"WWWWWWWWWWWWWWWWWWWW",
+#]
+
 level = [
-"WWWWWWWWWWWWWWWWWWWW",
-"W                  W",
-"W         WWWWWW   W",
-"W   WWWW       W   W",
-"W   W        WWWW  W",
-"W WWW  WWWW        W",
-"W   W     W W      W",
-"W   W     W   WWW WW",
-"W   WWW WWW   W W  W",
-"W     W   W   W W  W",
-"WWW   W   WWWWW W  W",
-"W W      WW        W",
-"W W   WWWW   WWW   W",
-"W     W    E   W   W",
-"WWWWWWWWWWWWWWWWWWWW",
+"WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+"W                                W",
+"W                                W",
+"W                                W",
+"W                                W",
+"W                                W",
+"W                                W",
+"W                                W",
+"W                                W",
+"W                                W",
+"W                                W",
+"W                                W",
+"W                                W",
+"W          E                     W",
+"W                                W",
+"W                                W",
+"W                                W",
+"W                                W",
+"W                                W",
+"W                                W",
+"W                                W",
+"W                                W",
+"W                                W",
+"W                                W",
+"W                                W",
+"W                                W",
+"WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
 ]
 
 # Parse the level string above. W = wall, E = exit
@@ -119,6 +155,10 @@ while running:
     if key[pygame.K_DOWN]:
         player.move(0, 2)
 
+<<<<<<< HEAD
+    # Move the player if an arrow key is pressed
+    key = pygame.key.get_pressed()
+>>>>>>> FETCH_HEAD
     if key[pygame.K_a]:
         player2.move(-2, 0)
     if key[pygame.K_d]:
@@ -130,7 +170,10 @@ while running:
     
     # Just added this to make it slightly fun ;)
     if player.rect.colliderect(end_rect):
-        raise SystemExit, "You win!"
+        raise SystemExit, "Player 1: You win!"
+
+    if player2.rect.colliderect(end_rect):
+        raise SystemExit, "Player 2: You win!"
     
     # Draw the scene
     screen.fill((0, 0, 0))
@@ -138,5 +181,7 @@ while running:
         pygame.draw.rect(screen, (255, 255, 255), wall.rect)
     pygame.draw.rect(screen, (255, 0, 0), end_rect)
     pygame.draw.rect(screen, (255, 200, 0), player.rect)
+<<<<<<< HEAD
     pygame.draw.rect(screen, (255, 200, 255), player2.rect)
+>>>>>>> FETCH_HEAD
     pygame.display.flip()
