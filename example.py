@@ -49,29 +49,59 @@ pygame.init()
 
 # Set up the display
 pygame.display.set_caption("Get to the red square!")
-screen = pygame.display.set_mode((320, 240))
+screen = pygame.display.set_mode((640, 440))
 
 clock = pygame.time.Clock()
 walls = [] # List to hold the walls
 player = Player() # Create the player
 
 # Holds the level layout in a list of strings.
+#level = [
+#"WWWWWWWWWWWWWWWWWWWW",
+#"W                  W",
+#"W         WWWWWW   W",
+#"W   WWWW       W   W",
+#"W   W        WWWW  W",
+#"W WWW  WWWW        W",
+#"W   W     W W      W",
+#"W   W     W   WWW WW",
+#"W   WWW WWW   W W  W",
+#"W     W   W   W W  W",
+#"WWW   W   WWWWW W  W",
+#"W W      WW        W",
+#"W W   WWWW   WWW   W",
+#"W     W    E   W   W",
+#"WWWWWWWWWWWWWWWWWWWW",
+#]
+
 level = [
-"WWWWWWWWWWWWWWWWWWWW",
-"W                  W",
-"W         WWWWWW   W",
-"W   WWWW       W   W",
-"W   W        WWWW  W",
-"W WWW  WWWW        W",
-"W   W     W W      W",
-"W   W     W   WWW WW",
-"W   WWW WWW   W W  W",
-"W     W   W   W W  W",
-"WWW   W   WWWWW W  W",
-"W W      WW        W",
-"W W   WWWW   WWW   W",
-"W     W    E   W   W",
-"WWWWWWWWWWWWWWWWWWWW",
+"WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+"W                                W",
+"W                                W",
+"W                                W",
+"W                                W",
+"W                                W",
+"W                                W",
+"W                                W",
+"W                                W",
+"W                                W",
+"W                                W",
+"W                                W",
+"W                                W",
+"W          E                     W",
+"W                                W",
+"W                                W",
+"W                                W",
+"W                                W",
+"W                                W",
+"W                                W",
+"W                                W",
+"W                                W",
+"W                                W",
+"W                                W",
+"W                                W",
+"W                                W",
+"WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
 ]
 
 # Parse the level string above. W = wall, E = exit
