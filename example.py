@@ -6,9 +6,12 @@ import pygame
 
 # Class for the orange dude
 class Player(object):
-    
-    def __init__(self):
-        self.rect = pygame.Rect(32, 32, 16, 16)
+
+
+    def __init__(self, x, y, value):
+        self.playerNumber = value
+        players.append(self)
+        self.rect = pygame.Rect(x, y, 16, 16)
 
     def move(self, dx, dy):
         
@@ -36,6 +39,13 @@ class Player(object):
                 if dy < 0: # Moving up; Hit the bottom side of the wall
                     self.rect.top = wall.rect.bottom
 
+        for player in players:
+                if self != player:
+                    if self.rect.colliderect(player.rect):
+                        raise SystemExit, "You tagged " + str(self.playerNumber)
+
+
+
 # Nice class to hold a wall rect
 class Wall(object):
     
@@ -53,8 +63,9 @@ screen = pygame.display.set_mode((320, 240))
 
 clock = pygame.time.Clock()
 walls = [] # List to hold the walls
-player = Player() # Create the player
-
+players = []
+player = Player(32, 32, 1) # Create the player
+player2 = Player(64, 64, 2)
 # Holds the level layout in a list of strings.
 level = [
 "WWWWWWWWWWWWWWWWWWWW",
@@ -107,6 +118,15 @@ while running:
         player.move(0, -2)
     if key[pygame.K_DOWN]:
         player.move(0, 2)
+
+    if key[pygame.K_a]:
+        player2.move(-2, 0)
+    if key[pygame.K_d]:
+        player2.move(2, 0)
+    if key[pygame.K_w]:
+        player2.move(0, -2)
+    if key[pygame.K_s]:
+        player2.move(0, 2)
     
     # Just added this to make it slightly fun ;)
     if player.rect.colliderect(end_rect):
@@ -118,4 +138,5 @@ while running:
         pygame.draw.rect(screen, (255, 255, 255), wall.rect)
     pygame.draw.rect(screen, (255, 0, 0), end_rect)
     pygame.draw.rect(screen, (255, 200, 0), player.rect)
+    pygame.draw.rect(screen, (255, 200, 255), player2.rect)
     pygame.display.flip()
