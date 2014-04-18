@@ -2,7 +2,7 @@ from network import Handler, poll
 import sys
 from threading import Thread
 from time import sleep
-
+import socket
 
 myname = raw_input('What is your name? ')
 
@@ -14,7 +14,12 @@ class Client(Handler):
     def on_msg(self, msg):
         print msg
         
-host, port = 'localhost', 8888
+
+s = socket.socket()
+
+host, port = '169.234.48.198' , 8888
+s.connect((host, port))
+
 client = Client(host, port)
 client.do_send({'join': myname})
 
