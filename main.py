@@ -4,8 +4,17 @@ import os
 import random
 import pygame
 import Player
+import time
 
-# Class for the orange dude
+##############################
+
+# randomly selects a player to be it at the start of the game
+# the "it" player number is the random number + 1
+def choose_it(players):
+    it_player = random.randint(0, len(players)-1)
+    players[it_player].becomes_it()
+
+#############################
 
 # Initialise pygame
 os.environ["SDL_VIDEO_CENTERED"] = "1"
@@ -30,6 +39,10 @@ clock = pygame.time.Clock()
 controls = {pygame.K_LEFT : (-2,0, player1), pygame.K_RIGHT : (2,0, player1), pygame.K_UP : (0,-2, player1), pygame.K_DOWN : (0,2, player1)} # player 1 controls
 controls.update({pygame.K_a : (-2,0, player2), pygame.K_d : (2,0, player2), pygame.K_w : (0,-2, player2), pygame.K_s : (0,2, player2)}) # player 2 controls
 
+############ MAIN GAME LOOP ##########################
+
+choose_it(players)
+
 while running:
     clock.tick(FRAMERATE)
     
@@ -48,8 +61,8 @@ while running:
     
     # Draw the scene
     screen.fill((0, 0, 0))
-    pygame.draw.rect(screen, (255, 200, 0), player1.rect)
-    pygame.draw.rect(screen, (255, 200, 255), player2.rect)
+    pygame.draw.rect(screen, player1.color, player1.rect)
+    pygame.draw.rect(screen, player2.color, player2.rect)
    
     disclaimertext = myfont.render("Player 1 score: {0}".format(player1.getScore()) , 1, (255,255,255))
     disclaimertext2 = myfont.render("Player 2 score: {0}".format(player2.getScore()) , 1, (255,255,255))
