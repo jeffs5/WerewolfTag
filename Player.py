@@ -4,23 +4,23 @@ import pygame
 
 class Player(object):
 
-    def __init__(self, x, y, value):
+    def __init__(self, x, y, value, players):
         self.playerNumber = value
         players.append(self)
         self.rect = pygame.Rect(x, y, 16, 16)
 
-    def move(self, dx, dy):
+    def move(self, dx, dy, borders, players):
         
         # Move each axis separately. Note that this checks for collisions both times.
         if dx != 0:
-            self.move_single_axis(dx, 0)
+            self.move_single_axis(dx, 0, borders, players)
         if dy != 0:
-            self.move_single_axis(0, dy)
+            self.move_single_axis(0, dy, borders, players)
     
     def getScore(self):
         return int(self.playerNumber)
 
-    def move_single_axis(self, dx, dy):
+    def move_single_axis(self, dx, dy, borders, players):
         
         # Move the rect
         self.rect.x += dx

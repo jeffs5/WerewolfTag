@@ -3,6 +3,7 @@
 import os
 import random
 import pygame
+import Player
 
 # Class for the orange dude
 
@@ -17,14 +18,17 @@ screen = pygame.display.set_mode((640, 440))
 borders = [pygame.Rect(0,0, 640, 1), pygame.Rect(0,0, 1, 440), pygame.Rect(639,0, 1, 440), pygame.Rect(0,439, 640, 1)]
 
 players = []
-player = Player(32, 32, 1) # Create the player
-player2 = Player(64, 64, 2)
+player1 = Player.Player(32, 32, 1, players) # Create the player
+player2 = Player.Player(64, 64, 2, players)
 
 myfont = pygame.font.SysFont("monospace", 16)
 
 running = True
 FRAMERATE = 60
 clock = pygame.time.Clock()
+
+controls = {pygame.K_LEFT : (-2,0, player1), pygame.K_RIGHT : (2,0, player1), pygame.K_UP : (0,-2, player1), pygame.K_DOWN : (0,2, player1)} # player 1 controls
+controls.update({pygame.K_a : (-2,0, player2), pygame.K_d : (2,0, player2), pygame.K_w : (0,-2, player2), pygame.K_s : (0,2, player2)}) # player 2 controls
 
 while running:
     clock.tick(FRAMERATE)
@@ -37,30 +41,17 @@ while running:
     
     # Move the player if an arrow key is pressed
     key = pygame.key.get_pressed()
-    if key[pygame.K_LEFT]:
-        player.move(-2, 0)
-    if key[pygame.K_RIGHT]:
-        player.move(2, 0)
-    if key[pygame.K_UP]:
-        player.move(0, -2)
-    if key[pygame.K_DOWN]:
-        player.move(0, 2)
-
-    if key[pygame.K_a]:
-        player2.move(-2, 0)
-    if key[pygame.K_d]:
-        player2.move(2, 0)
-    if key[pygame.K_w]:
-        player2.move(0, -2)
-    if key[pygame.K_s]:
-        player2.move(0, 2)
+    for pressed in controls:
+        if key[pressed]:
+            direction = controls.get(pressed)
+            direction[2].move(direction[0], direction[1], borders, players)
     
     # Draw the scene
     screen.fill((0, 0, 0))
-    pygame.draw.rect(screen, (255, 200, 0), player.rect)
+    pygame.draw.rect(screen, (255, 200, 0), player1.rect)
     pygame.draw.rect(screen, (255, 200, 255), player2.rect)
    
-    disclaimertext = myfont.render("Player 1 score: {0}".format(player.getScore()) , 1, (255,255,255))
+    disclaimertext = myfont.render("Player 1 score: {0}".format(player1.getScore()) , 1, (255,255,255))
     disclaimertext2 = myfont.render("Player 2 score: {0}".format(player2.getScore()) , 1, (255,255,255))
     screen.blit(disclaimertext, (16, 400))
     screen.blit(disclaimertext2, (16, 410))
