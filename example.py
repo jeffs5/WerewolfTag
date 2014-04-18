@@ -44,9 +44,9 @@ class Player(object):
         for player in players:
                 if self != player:
                     if self.rect.colliderect(player.rect):
-                        raise SystemExit, "You tagged " + str(self.playerNumber)
+                        raise SystemExit, "Player" + str(self.playerNumber) + " Has tagged the other player"
 
-        self.playerNumber += 1
+        # self.playerNumber += 1 to add score we must add another parameter in the player object for playerScore
 
 # Initialise pygame
 os.environ["SDL_VIDEO_CENTERED"] = "1"
