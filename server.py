@@ -13,8 +13,8 @@ class MyHandler(Handler):
         pass
     
     def on_msg(self, msg):
-        print msg
-    
+        self.do_send(msg)
+
 class Serv(Listener):
     handlerClass = MyHandler
 
