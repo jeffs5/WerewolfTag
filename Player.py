@@ -1,10 +1,9 @@
 import os
 import random
 import pygame
+import time
 
 class Player(object):
-
-    score = 0
 
     def __init__(self, x, y, value, players):
         self.playerNumber = value
@@ -12,30 +11,47 @@ class Player(object):
         self.rect = pygame.Rect(x, y, 16, 16)
         self.color = (255,255,255)
         self.is_it = False
+        self.score = 0
+        self.current_dir = (0,0)
 
     def move(self, dx, dy, borders, players):
         
         # Move each axis separately. Note that this checks for collisions both times.
         if dx != 0:
             self.move_single_axis(dx, 0, borders, players)
-            if self.is_it == False:
-                self.score = self.score + 1
         if dy != 0:
             self.move_single_axis(0, dy, borders, players)
-            if self.is_it == False:
-                self.score = self.score + 1
+
+        return players
     
     def getScore(self):
         return self.score
 
     def becomes_it(self):
+        #self.transform()
         self.color = (255, 0, 0)
         self.is_it = True
+
+        return self
         #set speed to faster!
 
     def becomes_not_it(self):
         self.color = (255, 255, 255)
         self.is_it = False
+
+        return self
+
+    #it player changes into wolf and cannot move
+    # def transform(self):
+    #     clock = pygame.time.Clock()
+    #     clock.tick(60)
+    #     self.color = (255, 0, 0)
+    #     clock.tick(60)
+    #     self.color = (255, 255, 255)
+    #     clock.tick(60)
+    #     self.color = (255, 0, 0)
+    #     clock.tick(60)
+    #     self.color = (255, 255, 255)
 
     def is_it(self):
         return is_it
@@ -43,12 +59,14 @@ class Player(object):
     def move_single_axis(self, dx, dy, borders, players):
         
         # Move the rect
+        collide = False
         self.rect.x += dx
         self.rect.y += dy
 
         # If you collide with a wall
         for border in borders:
             if self.rect.colliderect(border):
+                collide = True
                 if dx > 0: 
                     self.rect.right = border.left
                 if dx < 0: 
@@ -61,6 +79,24 @@ class Player(object):
         for player in players:
                 if self != player:
                     if self.rect.colliderect(player.rect):
-                        raise SystemExit, "Player" + str(self.playerNumber) + " Has tagged the other player"
+                        collide = True
 
-        # self.playerNumber += 1 to add score we must add another parameter in the player object for playerScore
+                        if dx > 0: 
+                            self.rect.right = player.rect.left
+                        if dx < 0: 
+                            self.rect.left = player.rect.right
+                        if dy > 0: 
+                            self.rect.bottom = player.rect.top
+                        if dy < 0: 
+                            self.rect.top = player.rect.bottom
+
+                        #add transform period where it player cannot move and no one can be tagged
+                        if player.is_it:
+                            player = player.becomes_not_it()
+                            self = self.becomes_it()
+                        else:
+                            player = player.becomes_it()
+                            self = self.becomes_not_it()
+
+        if collide == False and self.is_it != True:
+            self.score +=1;

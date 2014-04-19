@@ -35,6 +35,8 @@ myfont = pygame.font.SysFont("monospace", 16)
 running = True
 FRAMERATE = 60
 clock = pygame.time.Clock()
+now = time.time()
+time_up = now + 60
 
 controls = {pygame.K_LEFT : (-2,0, player1), pygame.K_RIGHT : (2,0, player1), pygame.K_UP : (0,-2, player1), pygame.K_DOWN : (0,2, player1)} # player 1 controls
 controls.update({pygame.K_a : (-2,0, player2), pygame.K_d : (2,0, player2), pygame.K_w : (0,-2, player2), pygame.K_s : (0,2, player2)}) # player 2 controls
@@ -44,6 +46,9 @@ controls.update({pygame.K_a : (-2,0, player2), pygame.K_d : (2,0, player2), pyga
 choose_it(players)
 
 while running:
+    if time.time() >= time_up:
+        running = False
+
     clock.tick(FRAMERATE)
     
     for e in pygame.event.get():
@@ -57,17 +62,24 @@ while running:
     for pressed in controls:
         if key[pressed]:
             direction = controls.get(pressed)
+
+            # used to know what direction players are currently going to see if they can be pushed
+            # direction[2].current_dir = (direction[0], direction[1])
+
             direction[2].move(direction[0], direction[1], borders, players)
-    
+
     # Draw the scene
     screen.fill((0, 0, 0))
-    pygame.draw.rect(screen, player1.color, player1.rect)
-    pygame.draw.rect(screen, player2.color, player2.rect)
+
+    for player in players:
+        pygame.draw.rect(screen, player.color, player.rect)
    
     disclaimertext = myfont.render("Player 1 score: {0}".format(player1.getScore()) , 1, (255,255,255))
     disclaimertext2 = myfont.render("Player 2 score: {0}".format(player2.getScore()) , 1, (255,255,255))
+    disclaimertext3 = myfont.render("Time left: {0}".format(round(time_up-time.time(), 2)) , 1, (255,255,255))
     screen.blit(disclaimertext, (16, 400))
     screen.blit(disclaimertext2, (16, 410))
+    screen.blit(disclaimertext3, (200, 10))
 
     pygame.display.flip()
     
