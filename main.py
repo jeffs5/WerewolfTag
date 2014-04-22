@@ -17,12 +17,11 @@ def choose_it(players):
 #############################
 
 def select_winner(players):
-    winner_score = 0
-    winner_player = 0
+    winner_player = players[0]
     for player in players:
-        if player.getScore > winner_score:
+        if player.get_score() > winner_player.get_score():
             winner_player = player
-    
+            
     return winner_player
 
 ############################
@@ -125,9 +124,9 @@ while running:
 
             player.draw_player(screen)
        
-        disclaimertext = myfont.render("Player 1 score: {0}".format(player1.getScore()) , 1, (255,255,255))
-        disclaimertext2 = myfont.render("Player 2 score: {0}".format(player2.getScore()) , 1, (255,255,255))
-        disclaimertext4 = myfont.render("Player 3 score: {0}".format(player3.getScore()) , 1, (255,255,255))
+        disclaimertext = myfont.render("Player 1 score: {0}".format(player1.get_score()) , 1, (255,255,255))
+        disclaimertext2 = myfont.render("Player 2 score: {0}".format(player2.get_score()) , 1, (255,255,255))
+        disclaimertext4 = myfont.render("Player 3 score: {0}".format(player3.get_score()) , 1, (255,255,255))
         disclaimertext3 = myfont.render("Time left: {0}".format(round(time_up-time.time(), 2)) , 1, (255,255,255))
         screen.blit(disclaimertext, (16, 400))
         screen.blit(disclaimertext2, (16, 410))
@@ -141,7 +140,7 @@ while running:
 
         time_up = myfont.render("Time's Up!", 1, (255,255,255))
         winner = select_winner(players)
-        winner_text = myfont.render("The winner is: Player " + str(winner.playerNumber), 1, (255,255,255))
+        winner_text = myfont.render("The winner is: Player " + str(winner.get_player_number()), 1, (255,255,255))
         restart_text = myfont.render("Press Space to Restart", 1, (255,255,255))
 
         screen.blit(time_up, (240, 10))

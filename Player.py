@@ -26,6 +26,9 @@ class Player(object):
             self.move_single_axis(0, dy, borders, players)
 
         return players
+
+    def get_player_number(self):
+        return self.playerNumber
     
     def get_score(self):
         return self.score
