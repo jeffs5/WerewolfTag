@@ -67,7 +67,7 @@ while running:
             # used to know what instruction players are currently going to see if they can be pushed
             # instruction[2].current_dir = (instruction[0], instruction[1])
 
-            #if the player has an attribute check if they can still
+            #if the player has an attribute check if they can still move
             if len(moving_player.attributes) > 0:
                 for attribute in moving_player.attributes:
                     if attribute != "transforming":
@@ -78,16 +78,20 @@ while running:
     # Draw the scene
     screen.fill((0, 0, 0))
 
+    #check to see if any player is still transforming
     for player in players:
         for attribute in player.attributes:
             if attribute == "transforming":
                 if time.time() >= player.transform_complete:
                     player.finish_transform()
+
+                #randomly tested modulo numbers were used for the animation
                 elif player.transform_counter %18 == 1:
                     player.color = (255, 255, 255)
                 elif player.transform_counter %6 == 1:
                     player.color = (255, 0, 0)
 
+                #counter used to determine which transformation animation should be shown
                 player.transform_counter += 1
 
         player.draw_player(screen)

@@ -15,7 +15,7 @@ class Player(object):
         self.current_dir = (0,0)
         self.transform_complete = time.time()
         self.attributes = []
-        self.transform_counter = 0
+        self.transform_counter = 0 #used to know which animation to display during transformation
 
     def move(self, dx, dy, borders, players):
         
@@ -42,29 +42,20 @@ class Player(object):
 
         return self
 
-    #it player changes into wolf and cannot move
+    #starts transformation into wolf, if they are just tagged, 
+    #they cannot move for 3 seconds
     def start_transform(self):
         self.attributes.append("transforming")
         self.transform_complete = time.time() + 3
 
+    #completes the werewolf transformation, should be called only
+    #when the global/main clock notices that 3+ seconds have
+    #passed and the player is not done transforming
     def finish_transform(self):
         self.attributes.remove("transforming")
         self.is_it = True
         self.color = (255, 0, 0)
         transform_counter = 0
-
-    #     clock = pygame.time.Clock()
-    #     clock.tick(60)
-    #     self.color = (255, 0, 0)
-    #     clock.tick(60)
-    #     self.color = (255, 255, 255)
-    #     clock.tick(60)
-    #     self.color = (255, 0, 0)
-    #     clock.tick(60)
-    #     self.color = (255, 255, 255)
-
-    def is_it(self):
-        return is_it
 
     def move_single_axis(self, dx, dy, borders, players):
         
@@ -113,3 +104,6 @@ class Player(object):
 
     def draw_player(self, screen):
         pygame.draw.rect(screen, self.color, self.rect)
+
+    def is_it(self):
+        return is_it
