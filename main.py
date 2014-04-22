@@ -30,7 +30,7 @@ def init_game(num_players, players):
     for x in range (0, num_players):
         x_axis = 100 * (x + 1)
         y_axis = 100 * (x + 1)
-        player = Player.Player(x_axis, y_axis, x, players)
+        player = Player.Player(x_axis, y_axis, x+1 , players)
 
     choose_it(players)
 
