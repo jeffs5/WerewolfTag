@@ -83,8 +83,14 @@ while running:
             if attribute == "transforming":
                 if time.time() >= player.transform_complete:
                     player.finish_transform()
-                    
-        pygame.draw.rect(screen, player.color, player.rect)
+                elif player.transform_counter %18 == 1:
+                    player.color = (255, 255, 255)
+                elif player.transform_counter %6 == 1:
+                    player.color = (255, 0, 0)
+
+                player.transform_counter += 1
+
+        player.draw_player(screen)
    
     disclaimertext = myfont.render("Player 1 score: {0}".format(player1.getScore()) , 1, (255,255,255))
     disclaimertext2 = myfont.render("Player 2 score: {0}".format(player2.getScore()) , 1, (255,255,255))

@@ -15,6 +15,7 @@ class Player(object):
         self.current_dir = (0,0)
         self.transform_complete = time.time()
         self.attributes = []
+        self.transform_counter = 0
 
     def move(self, dx, dy, borders, players):
         
@@ -31,7 +32,6 @@ class Player(object):
 
     def becomes_it(self):
         self.start_transform()
-        self.color = (255, 0, 0)
 
         return self
         #set speed to faster!
@@ -50,6 +50,8 @@ class Player(object):
     def finish_transform(self):
         self.attributes.remove("transforming")
         self.is_it = True
+        self.color = (255, 0, 0)
+        transform_counter = 0
 
     #     clock = pygame.time.Clock()
     #     clock.tick(60)
@@ -108,3 +110,6 @@ class Player(object):
 
         if collide == False and self.is_it != True:
             self.score +=1;
+
+    def draw_player(self, screen):
+        pygame.draw.rect(screen, self.color, self.rect)
