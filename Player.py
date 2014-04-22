@@ -13,6 +13,8 @@ class Player(object):
         self.is_it = False
         self.score = 0
         self.current_dir = (0,0)
+        self.transform_complete = time.time()
+        self.attributes = []
 
     def move(self, dx, dy, borders, players):
         
@@ -28,9 +30,8 @@ class Player(object):
         return self.score
 
     def becomes_it(self):
-        #self.transform()
+        self.start_transform()
         self.color = (255, 0, 0)
-        self.is_it = True
 
         return self
         #set speed to faster!
@@ -42,7 +43,14 @@ class Player(object):
         return self
 
     #it player changes into wolf and cannot move
-    # def transform(self):
+    def start_transform(self):
+        self.attributes.append("transforming")
+        self.transform_complete = time.time() + 3
+
+    def finish_transform(self):
+        self.attributes.remove("transforming")
+        self.is_it = True
+
     #     clock = pygame.time.Clock()
     #     clock.tick(60)
     #     self.color = (255, 0, 0)
@@ -91,12 +99,12 @@ class Player(object):
                             self.rect.top = player.rect.bottom
 
                         #add transform period where it player cannot move and no one can be tagged
-                        if player.is_it:
-                            player = player.becomes_not_it()
-                            self = self.becomes_it()
-                        else:
+                        if self.is_it:
                             player = player.becomes_it()
                             self = self.becomes_not_it()
+                        elif self.is_it != True and player.is_it:
+                            player = player.becomes_not_it()
+                            self = self.becomes_it()
 
         if collide == False and self.is_it != True:
             self.score +=1;

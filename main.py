@@ -61,17 +61,29 @@ while running:
     key = pygame.key.get_pressed()
     for pressed in controls:
         if key[pressed]:
-            direction = controls.get(pressed)
+            instruction = controls.get(pressed)
+            moving_player = instruction[2]
 
-            # used to know what direction players are currently going to see if they can be pushed
-            # direction[2].current_dir = (direction[0], direction[1])
+            # used to know what instruction players are currently going to see if they can be pushed
+            # instruction[2].current_dir = (instruction[0], instruction[1])
 
-            direction[2].move(direction[0], direction[1], borders, players)
+            #if the player has an attribute check if they can still
+            if len(moving_player.attributes) > 0:
+                for attribute in moving_player.attributes:
+                    if attribute != "transforming":
+                        moving_player.move(instruction[0], instruction[1], borders, players)
+            else:
+                moving_player.move(instruction[0], instruction[1], borders, players)
 
     # Draw the scene
     screen.fill((0, 0, 0))
 
     for player in players:
+        for attribute in player.attributes:
+            if attribute == "transforming":
+                if time.time() >= player.transform_complete:
+                    player.finish_transform()
+                    
         pygame.draw.rect(screen, player.color, player.rect)
    
     disclaimertext = myfont.render("Player 1 score: {0}".format(player1.getScore()) , 1, (255,255,255))
