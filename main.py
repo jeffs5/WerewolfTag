@@ -98,13 +98,13 @@ while running:
 
         player.draw_player(screen)
    
-    disclaimertext = myfont.render("Player 1 score: {0}".format(player1.getScore()) , 1, (255,255,255))
-    disclaimertext2 = myfont.render("Player 2 score: {0}".format(player2.getScore()) , 1, (255,255,255))
-    disclaimertext4 = myfont.render("Player 3 score: {0}".format(player3.getScore()) , 1, (255,255,255))
+    disclaimertext = myfont.render("Player 1 score: {0}".format(player1.get_score()) , 1, (255,255,255))
+    disclaimertext2 = myfont.render("Player 2 score: {0}".format(player2.get_score()) , 1, (255,255,255))
+    disclaimertext4 = myfont.render("Player 3 score: {0}".format(player3.get_score()) , 1, (255,255,255))
     disclaimertext3 = myfont.render("Time left: {0}".format(round(time_up-time.time(), 2)) , 1, (255,255,255))
     screen.blit(disclaimertext, (16, 400))
     screen.blit(disclaimertext2, (16, 410))
-    screen.blit(disclaimertext4, (16, 410))
+    screen.blit(disclaimertext4, (16, 420))
     screen.blit(disclaimertext3, (200, 10))
 
     pygame.display.flip()

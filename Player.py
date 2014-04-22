@@ -27,7 +27,7 @@ class Player(object):
 
         return players
     
-    def getScore(self):
+    def get_score(self):
         return self.score
 
     def becomes_it(self):
@@ -47,6 +47,7 @@ class Player(object):
     def start_transform(self):
         self.attributes.append("transforming")
         self.transform_complete = time.time() + 3
+        self.score = self.score + 1
 
     #completes the werewolf transformation, should be called only
     #when the global/main clock notices that 3+ seconds have
@@ -99,8 +100,8 @@ class Player(object):
                             player = player.becomes_not_it()
                             self = self.becomes_it()
 
-        if collide == False and self.is_it != True:
-            self.score +=1;
+        #if collide == False and self.is_it != True:
+            #self.score +=1;
 
     def draw_player(self, screen):
         pygame.draw.rect(screen, self.color, self.rect)
