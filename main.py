@@ -22,10 +22,10 @@ def select_winner(players):
     for player in players:
         if player.getScore > winner_score:
             winner_player = player
-
-    print winner_player.playerNumber
-    print winner_player.getScore
+    
     return winner_player
+
+############################
 
 # Initialise pygame
 os.environ["SDL_VIDEO_CENTERED"] = "1"
@@ -140,11 +140,17 @@ while running:
         screen.fill(backgroundColor)
 
         time_up = myfont.render("Time's Up!", 1, (255,255,255))
-
         winner = select_winner(players)
         winner_text = myfont.render("The winner is: Player " + str(winner.playerNumber), 1, (255,255,255))
-        screen.blit(time_up, (200, 10))
-        screen.blit(winner_text, (200, 80))
+        restart_text = myfont.render("Press Space to Restart", 1, (255,255,255))
+
+        screen.blit(time_up, (240, 10))
+        screen.blit(winner_text, (210, 210))
+        screen.blit(restart_text, (210, 220))
+
+        if key[pygame.K_SPACE]:
+            mode = 1
+            now = time.time()
 
 
     pygame.display.flip()
