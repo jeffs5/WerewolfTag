@@ -21,7 +21,7 @@ def select_winner(players):
     for player in players:
         if player.get_score() > winner_player.get_score():
             winner_player = player
-            
+
     return winner_player
 
 ############################
@@ -113,8 +113,10 @@ while running:
         # Draw the scene
         screen.fill((0, 0, 0))
 
+
         #check to see if any player is still transforming
         for player in players:
+            player.increase_score(1)
             for attribute in player.attributes:
                 if attribute == "transforming":
                     if time.time() >= player.transform_complete:
