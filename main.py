@@ -29,6 +29,7 @@ borders = [pygame.Rect(0,0, 640, 1), pygame.Rect(0,0, 1, 440), pygame.Rect(639,0
 players = []
 player1 = Player.Player(32, 32, 1, players) # Create the player
 player2 = Player.Player(64, 64, 2, players)
+player3 = Player.Player(200, 200, 3, players)
 
 myfont = pygame.font.SysFont("monospace", 16)
 
@@ -40,6 +41,7 @@ time_up = now + 60
 
 controls = {pygame.K_LEFT : (-2,0, player1), pygame.K_RIGHT : (2,0, player1), pygame.K_UP : (0,-2, player1), pygame.K_DOWN : (0,2, player1)} # player 1 controls
 controls.update({pygame.K_a : (-2,0, player2), pygame.K_d : (2,0, player2), pygame.K_w : (0,-2, player2), pygame.K_s : (0,2, player2)}) # player 2 controls
+controls.update({pygame.K_b : (-2,0, player3), pygame.K_m : (2,0, player3), pygame.K_j : (0,-2, player3), pygame.K_n : (0,2, player3)})
 
 ############ MAIN GAME LOOP ##########################
 
@@ -98,9 +100,11 @@ while running:
    
     disclaimertext = myfont.render("Player 1 score: {0}".format(player1.getScore()) , 1, (255,255,255))
     disclaimertext2 = myfont.render("Player 2 score: {0}".format(player2.getScore()) , 1, (255,255,255))
+    disclaimertext4 = myfont.render("Player 3 score: {0}".format(player3.getScore()) , 1, (255,255,255))
     disclaimertext3 = myfont.render("Time left: {0}".format(round(time_up-time.time(), 2)) , 1, (255,255,255))
     screen.blit(disclaimertext, (16, 400))
     screen.blit(disclaimertext2, (16, 410))
+    screen.blit(disclaimertext4, (16, 410))
     screen.blit(disclaimertext3, (200, 10))
 
     pygame.display.flip()
