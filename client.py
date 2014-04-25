@@ -9,6 +9,7 @@ import Player
 import time
 
 players = []
+player = None 
 
 class Client(Handler):
     
@@ -17,11 +18,12 @@ class Client(Handler):
         pass
     
     def on_msg(self, msg):
-    	global players
-    	print type(players)
-        if 'join' in msg:
-        	print str(msg['join']) + ' joined'
-        	player = Player.Player(100, 100, msg['join'], players)
+		global players
+		global player
+		print type(players)
+		if 'join' in msg:
+			print str(msg['join']) + ' joined'
+			player = Player.Player(100, 100, msg['join'], players)
 
 
         
@@ -111,7 +113,7 @@ while running:
 	        if key[pygame.K_SPACE]:
 	            mode = 1
 	            now = time.time()
-	            sleep(3000)
+	            sleep(1)
 	            choose_it(players)
 
 	    #actual game
@@ -127,7 +129,7 @@ while running:
 	        for pressed in controls:
 	            if key[pressed]:
 	                instruction = controls.get(pressed)
-	                moving_player = players[instruction[2]]
+	                moving_player = player
 
 	                # used to know what instruction players are currently going to see if they can be pushed
 	                # instruction[2].current_dir = (instruction[0], instruction[1])
@@ -138,7 +140,9 @@ while running:
 	                        if attribute != "transforming":
 	                            moving_player.move(instruction[0], instruction[1], borders, players)
 	                else:
-	                    moving_player.move(instruction[0], instruction[1], borders, players)
+						moving_player.move(instruction[0], instruction[1], borders, players)
+						client.do_send({'move': instruction, 'player': player.get_player_number()})
+							
 
 	        # Draw the scene
 	        screen.fill((0, 0, 0))

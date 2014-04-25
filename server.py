@@ -16,7 +16,9 @@ class MyHandler(Handler):
         del(handlers[self])
     
     def on_msg(self, msg):
-        self.do_send(msg)
+		 if 'move' in msg:
+			print(msg['move'])
+			self.do_send(msg)
 
 class Serv(Listener):
     handlerClass = MyHandler
