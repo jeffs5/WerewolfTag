@@ -34,32 +34,6 @@ def init_game(num_players, players):
 
     choose_it(players)
 
-###########################
-
-# Initialise pygame
-os.environ["SDL_VIDEO_CENTERED"] = "1"
-pygame.init()
-
-# Set up the display
-pygame.display.set_caption("Play Tag!")
-screen = pygame.display.set_mode((640, 440))
-
-mode = 0
-
-borders = [pygame.Rect(0,0, 640, 1), pygame.Rect(0,0, 1, 440), pygame.Rect(639,0, 1, 440), pygame.Rect(0,439, 640, 1)]
-
-players = []
-
-
-myfont = pygame.font.SysFont("monospace", 16)
-
-running = True
-FRAMERATE = 60
-clock = pygame.time.Clock()
-
-controls = {pygame.K_LEFT : (-1,0, 0), pygame.K_RIGHT : (1,0, 0), pygame.K_UP : (0,-1, 0), pygame.K_DOWN : (0,1, 0)} # player 1 controls
-controls.update({pygame.K_a : (-1,0, 1), pygame.K_d : (1,0, 1), pygame.K_w : (0,-1, 1), pygame.K_s : (0,1, 1)}) # player 2 controls
-controls.update({pygame.K_b : (-1,0, 2), pygame.K_m : (1,0, 2), pygame.K_j : (0,-1, 2), pygame.K_n : (0,1, 2)})
 
 ############ MAIN GAME LOOP ##########################
 

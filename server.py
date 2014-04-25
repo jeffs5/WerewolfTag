@@ -7,10 +7,13 @@ handlers = {}  # map client handler to user name
 class MyHandler(Handler):
     
     def on_open(self):
-        pass
+    	player_number = len(handlers) + 1
+    	handlers[self] = player_number
+        self.do_send({'join': player_number})
+        print player_number
         
     def on_close(self):
-        pass
+        del(handlers[self])
     
     def on_msg(self, msg):
         self.do_send(msg)
@@ -22,6 +25,10 @@ class Serv(Listener):
 port = 8888
 server = Serv(port)
 while 1:
-    poll()
-    sleep(0.05)  # seconds
+	try:
+	    poll()
+	    sleep(0.05)  # seconds
+	except KeyboardInterrupt:
+		server.close()
+		exit("\n")
 
