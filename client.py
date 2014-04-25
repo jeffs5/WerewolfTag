@@ -23,7 +23,7 @@ class Client(Handler):
 		print type(players)
 		if 'join' in msg:
 			print str(msg['join']) + ' joined'
-			player = Player.Player(100, 100, msg['join'], players)
+			player = Player.Player(random.randint(0,100), random.randint(0,100), msg['join'], players)
 
 
         
