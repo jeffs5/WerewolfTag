@@ -57,9 +57,9 @@ running = True
 FRAMERATE = 60
 clock = pygame.time.Clock()
 
-controls = {pygame.K_LEFT : (-2,0, 0), pygame.K_RIGHT : (2,0, 0), pygame.K_UP : (0,-2, 0), pygame.K_DOWN : (0,2, 0)} # player 1 controls
-controls.update({pygame.K_a : (-2,0, 1), pygame.K_d : (2,0, 1), pygame.K_w : (0,-2, 1), pygame.K_s : (0,2, 1)}) # player 2 controls
-controls.update({pygame.K_b : (-2,0, 2), pygame.K_m : (2,0, 2), pygame.K_j : (0,-2, 2), pygame.K_n : (0,2, 2)})
+controls = {pygame.K_LEFT : (-1,0, 0), pygame.K_RIGHT : (1,0, 0), pygame.K_UP : (0,-1, 0), pygame.K_DOWN : (0,1, 0)} # player 1 controls
+controls.update({pygame.K_a : (-1,0, 1), pygame.K_d : (1,0, 1), pygame.K_w : (0,-1, 1), pygame.K_s : (0,1, 1)}) # player 2 controls
+controls.update({pygame.K_b : (-1,0, 2), pygame.K_m : (1,0, 2), pygame.K_j : (0,-1, 2), pygame.K_n : (0,1, 2)})
 
 ############ MAIN GAME LOOP ##########################
 
@@ -150,17 +150,15 @@ while running:
         time_up = myfont.render("Time's Up!", 1, (255,255,255))
         winner = select_winner(players)
         winner_text = myfont.render("The winner is: Player " + str(winner.get_player_number()), 1, (255,255,255))
-        restart_text = myfont.render("Press Space to Restart", 1, (255,255,255))
+        restart_text = myfont.render("Press Space to continue", 1, (255,255,255))
 
         screen.blit(time_up, (240, 10))
         screen.blit(winner_text, (210, 210))
         screen.blit(restart_text, (210, 220))
 
         if key[pygame.K_SPACE]:
-            mode = 1
-            now = time.time()
             players = []
-            init_game(3, players)
+            mode = 0
 
     pygame.display.flip()
     

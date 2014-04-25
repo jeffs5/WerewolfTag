@@ -15,15 +15,16 @@ class Player(object):
         self.current_dir = (0,0)
         self.transform_complete = time.time()
         self.attributes = []
+        self.speed = 2
         self.transform_counter = 0 #used to know which animation to display during transformation
 
     def move(self, dx, dy, borders, players):
         
         # Move each axis separately. Note that this checks for collisions both times.
         if dx != 0:
-            self.move_single_axis(dx, 0, borders, players)
+            self.move_single_axis(dx * self.speed, 0, borders, players)
         if dy != 0:
-            self.move_single_axis(0, dy, borders, players)
+            self.move_single_axis(0, dy * self.speed, borders, players)
 
         return players
 
