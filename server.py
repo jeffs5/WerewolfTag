@@ -9,7 +9,8 @@ class MyHandler(Handler):
     def on_open(self):
     	player_number = len(handlers) + 1
     	handlers[self] = player_number
-        self.do_send({'join': player_number})
+        for i in handlers:
+            i.do_send({'join': player_number})
         print player_number
         
     def on_close(self):
