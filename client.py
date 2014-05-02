@@ -19,7 +19,6 @@ class Client(Handler):
     
     def on_msg(self, msg):
 		global players
-		global player
 
 		if 'join' in msg:
 			player_number = msg['join']
@@ -109,7 +108,7 @@ while running:
 	    #start screen
 	    if mode == 0:
 	        title = myfont.render("Werewolf Tag", 1, (255,255,255))
-	        intro_message = myfont.render("You are player " + str(msg['join']), 1, (255,255,255))
+	        intro_message = myfont.render("You are player " + str(player_number), 1, (255,255,255))
 	        instructions = myfont.render("Press SPACE to Start Countdown", 1, (255,255,255))
 	        screen.blit(title, (240, 10))
 	        screen.blit(instructions, (210, 210))
@@ -118,8 +117,8 @@ while running:
 	            client.do_send("load")
 
 	    #get ready stage        
-	    if mode == 1
-			instructions = myfont.render("Get Ready to start!", 1, (255,255,255))
+	    if mode == 1:
+	        instructions = myfont.render("Get Ready to start!", 1, (255,255,255))
 	        screen.blit(instructions, (210, 210))
 
 
