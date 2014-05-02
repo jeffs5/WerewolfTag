@@ -12,6 +12,16 @@ players = []
 borders = []
 player = None 
 
+def create_player(msg):
+    global players
+    #might not work
+    player = Player.Player(random.randint(0,640), random.randint(0,440), msg['join'], players)
+    print "player created" + len(players)
+    while hit_player(player):
+        player = Player.Player(random.randint(0,640), random.randint(0,440), msg['join'], players)
+
+    client.do_send({'added_player' : player})
+
 class Client(Handler):
     
 
@@ -42,15 +52,6 @@ def periodic_poll():
         poll()
         sleep(0.05)  # seconds
   
-def create_player(self, msg):
-    global players
-    #might not work
-    player = Player.Player(random.randint(0,640), random.randint(0,440), msg['join'], players)
-
-    while hit_player(player):
-        player = Player.Player(random.randint(0,640), random.randint(0,440), msg['join'], players)
-
-    client.do_send({'added_player' : player})
 
 def hit_player(self, player):
     global border
@@ -80,6 +81,7 @@ def find_player(self, player_number):
 # randomly selects a player to be it at the start of the game
 # the "it" player number is the random number + 1
 def choose_it(players):
+    print len(players)
     it_player = random.randint(0, len(players)-1)
     players[it_player].becomes_it()
 
