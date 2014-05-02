@@ -9,7 +9,7 @@ import Player
 import time
 
 players = []
-player = None 
+player_number = None 
 
 class Client(Handler):
     
@@ -20,10 +20,13 @@ class Client(Handler):
     def on_msg(self, msg):
 		global players
 		global player
-		print type(players)
+
 		if 'join' in msg:
-			print str(msg['join']) + ' joined'
-			player = Player.Player(random.randint(0,100), random.randint(0,100), msg['join'], players)
+			player_number = msg['join']
+			
+		if 'load' in msg:
+			players = msg['load']
+			mode = 1
 
 
         
@@ -106,18 +109,23 @@ while running:
 	    #start screen
 	    if mode == 0:
 	        title = myfont.render("Werewolf Tag", 1, (255,255,255))
-	        instructions = myfont.render("Press SPACE to Start", 1, (255,255,255))
+	        intro_message = myfont.render("You are player " + str(msg['join']), 1, (255,255,255))
+	        instructions = myfont.render("Press SPACE to Start Countdown", 1, (255,255,255))
 	        screen.blit(title, (240, 10))
 	        screen.blit(instructions, (210, 210))
 
 	        if key[pygame.K_SPACE]:
-	            mode = 1
-	            now = time.time()
-	            sleep(1)
-	            choose_it(players)
+	            client.do_send("load")
+
+	    #get ready stage        
+	    if mode == 1
+			instructions = myfont.render("Get Ready to start!", 1, (255,255,255))
+	        screen.blit(instructions, (210, 210))
+
+
 
 	    #actual game
-	    if mode == 1:
+	    if mode == 2:
 	        time_up = now + 60
 	        if time.time() >= time_up:
 	            mode = 2
@@ -173,7 +181,7 @@ while running:
 	        screen.blit(disclaimertext3, (200, 10))
 
 	    #once the time is up!
-	    if mode == 2:
+	    if mode == 3:
 	        backgroundColor = (0,0,0)
 	        screen.fill(backgroundColor)
 
