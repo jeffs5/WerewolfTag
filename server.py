@@ -12,9 +12,18 @@ def distribute_msg(msg):
 		handler.do_send(msg)
 
 def create_players():
-	for player in handlers:
-		handlers[player] = Player.Player(random.randint(0,100), random.randint(0,100), handlers[player], players)
+    for handler in handlers:
+        player = Player.Player(random.randint(0,100), random.randint(0,100), handlers[player], players)
+        players.append(player)
 
+def countdown():
+    now = time.time()
+    time_up = now + 5
+
+    while time.time() < time_up:
+        time_left = time_up-time.time()
+        sleep(0.05)  # seconds
+        distribute_msg({'countdown': time_left})
 
 class MyHandler(Handler):
     
@@ -34,6 +43,8 @@ class MyHandler(Handler):
             distribute_msg(msg)
         if 'load' in msg:
             distribute_msg(msg)
+            countdown()
+            distribute_msg("start")
 
 
 class Serv(Listener):
@@ -42,6 +53,9 @@ class Serv(Listener):
 
 port = 8888
 server = Serv(port)
+
+now = time.time()
+
 while 1:
 	try:
 	    poll()

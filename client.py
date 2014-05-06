@@ -20,15 +20,22 @@ class Client(Handler):
 		global players
 		global mode
 		global now
+		global countdown
 
 		if 'join' in msg:
 			player_number = msg['join']
 			
-		if 'load' in msg:
+		elif 'load' in msg:
 			mode = 1
 			now = time.time()	
 
+		elif "countdown" in msg:
+			countdown = int(msg['countdown'] + 1)
 
+		elif "start" in msg:
+			mode = 2
+			now = time.time()	
+			return
         
 host, port = 'localhost', 8888
 client = Client(host, port)
@@ -38,8 +45,6 @@ def periodic_poll():
         poll()
         sleep(0.05)  # seconds
   
-
-
 ##############################
 
 # randomly selects a player to be it at the start of the game
@@ -95,6 +100,7 @@ running = True
 FRAMERATE = 60
 clock = pygame.time.Clock()
 now = time.time()
+countdown = 5
 
 controls = {pygame.K_LEFT : (-1,0), pygame.K_RIGHT : (1,0), pygame.K_UP : (0,-1), pygame.K_DOWN : (0,1)} # player controls
 
@@ -123,17 +129,15 @@ while running:
 	    	# clear screen
 	        screen.fill((0, 0, 0))
 
-	        time_up = now + 5
-	        if time.time() < time_up:
-		        instructions = myfont.render("Get Ready to start!", 1, (255,255,255))
-		        countdown = myfont.render("{0}".format(int(time_up-time.time()) + 1) , 1, (255,255,255))
-		        screen.blit(instructions, (210, 210))
-		        screen.blit(countdown, (330, 230))
-	      	else:
-	      		print "done"
+	        #should the client or server have the countdown clock?
+	        instructions = myfont.render("Get Ready to start!", 1, (255,255,255))
+	        countdown_text = myfont.render("{0}".format(countdown), 1, (255,255,255))
+	        screen.blit(instructions, (210, 210))
+	        screen.blit(countdown_text, (300, 230))
 
 	    #actual game
 	    if mode == 2:
+	    	print "mode 2"
 	        time_up = now + 60
 	        if time.time() >= time_up:
 	            mode = 2
@@ -180,10 +184,10 @@ while running:
 
 	            player.draw_player(screen)
 	       
-	        disclaimertext = myfont.render("Player 1 score: {0}".format(players[0].get_score()) , 1, (255,255,255))
-	        disclaimertext3 = myfont.render("Time left: {0}".format(round(time_up-time.time(), 2)) , 1, (255,255,255))
-	        screen.blit(disclaimertext, (16, 400))
-	        screen.blit(disclaimertext3, (200, 10))
+	        # disclaimertext = myfont.render("Player 1 score: {0}".format(players[0].get_score()) , 1, (255,255,255))
+	        # disclaimertext3 = myfont.render("Time left: {0}".format(round(time_up-time.time(), 2)) , 1, (255,255,255))
+	        # screen.blit(disclaimertext, (16, 400))
+	        # screen.blit(disclaimertext3, (200, 10))
 
 	    #once the time is up!
 	    if mode == 3:
