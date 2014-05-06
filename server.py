@@ -2,6 +2,7 @@ from network import Listener, Handler, poll
 import Player
 import Trap
 from time import sleep
+import time
 
 
 handlers = {}  # map client handler to user name
@@ -47,6 +48,7 @@ class MyHandler(Handler):
         del(handlers[self])
     
     def on_msg(self, msg):
+
 		if 'move' in msg:
 			distribute_msg(msg)
 		if 'load' in msg:
