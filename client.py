@@ -19,12 +19,12 @@ class Client(Handler):
     
     def on_msg(self, msg):
 		global players
+		global mode
 
 		if 'join' in msg:
 			player_number = msg['join']
 			
 		if 'load' in msg:
-			players = msg['load']
 			mode = 1
 
 
@@ -118,6 +118,8 @@ while running:
 
 	    #get ready stage        
 	    if mode == 1:
+	    	# clear screen
+	        screen.fill((0, 0, 0))
 	        instructions = myfont.render("Get Ready to start!", 1, (255,255,255))
 	        screen.blit(instructions, (210, 210))
 

@@ -29,11 +29,10 @@ class MyHandler(Handler):
         del(handlers[self])
     
     def on_msg(self, msg):
-		 if 'move' in msg:
-			print(msg['move'])
-			distribute_msg(msg)
-		if 'load' in msg:
-
+        if 'move' in msg:
+            distribute_msg(msg)
+        if 'load' in msg:
+            distribute_msg(msg)
 
 
 class Serv(Listener):
