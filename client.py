@@ -114,7 +114,7 @@ while running:
 	        screen.blit(instructions, (210, 210))
 
 	        if key[pygame.K_SPACE]:
-	            client.do_send("load")
+	            client.do_send({'load' : 'load'})
 
 	    #get ready stage        
 	    if mode == 1:
