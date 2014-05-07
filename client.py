@@ -1,4 +1,4 @@
- from network import Handler, poll
+from network import Handler, poll
 import sys
 from threading import Thread
 from time import sleep
@@ -9,7 +9,7 @@ import Player
 import time
 
 players = []
-player = None 
+player_number = None 
 
 class Client(Handler):
     
@@ -19,8 +19,6 @@ class Client(Handler):
     
     def on_msg(self, msg):
 		global players
-<<<<<<< HEAD
-<<<<<<< HEAD
 		global mode
 
 		if 'join' in msg:
@@ -28,20 +26,6 @@ class Client(Handler):
 			
 		elif 'load' in msg:
 			mode = 1
-=======
-		global player
-		print type(players)
-		if 'join' in msg:
-			print str(msg['join']) + ' joined'
-			player = Player.Player(random.randint(0,100), random.randint(0,100), msg['join'], players)
->>>>>>> parent of 8cdb7b2... Added loading stage
-=======
-		global player
-		print type(players)
-		if 'join' in msg:
-			print str(msg['join']) + ' joined'
-			player = Player.Player(random.randint(0,100), random.randint(0,100), msg['join'], players)
->>>>>>> parent of 8cdb7b2... Added loading stage
 
 		elif "countdown" in msg:
 			countdown = int(msg['countdown'] + 1)
@@ -128,22 +112,12 @@ while running:
 	    #start screen
 	    if mode == 0:
 	        title = myfont.render("Werewolf Tag", 1, (255,255,255))
-<<<<<<< HEAD
-<<<<<<< HEAD
 	        intro_message = myfont.render("You are player " + str(player_number), 1, (255,255,255))
 	        instructions = myfont.render("Press SPACE to Start Countdown", 1, (255,255,255))
-=======
-	        instructions = myfont.render("Press SPACE to Start", 1, (255,255,255))
->>>>>>> parent of 8cdb7b2... Added loading stage
-=======
-	        instructions = myfont.render("Press SPACE to Start", 1, (255,255,255))
->>>>>>> parent of 8cdb7b2... Added loading stage
 	        screen.blit(title, (240, 10))
 	        screen.blit(instructions, (210, 210))
 
 	        if key[pygame.K_SPACE]:
-<<<<<<< HEAD
-<<<<<<< HEAD
 	            client.do_send({'load' : 'load'})
 
 	    #get ready stage        
@@ -158,24 +132,6 @@ while running:
 	    #actual game
 	    if mode == 2:
 	    	print "mode 2"
-=======
-	            mode = 1
-	            now = time.time()
-	            sleep(1)
-	            choose_it(players)
-
-	    #actual game
-	    if mode == 1:
->>>>>>> parent of 8cdb7b2... Added loading stage
-=======
-	            mode = 1
-	            now = time.time()
-	            sleep(1)
-	            choose_it(players)
-
-	    #actual game
-	    if mode == 1:
->>>>>>> parent of 8cdb7b2... Added loading stage
 	        time_up = now + 60
 	        if time.time() >= time_up:
 	            mode = 2
@@ -231,7 +187,7 @@ while running:
 	        # screen.blit(disclaimertext3, (200, 10))
 
 	    #once the time is up!
-	    if mode == 2:
+	    if mode == 3:
 	        backgroundColor = (0,0,0)
 	        screen.fill(backgroundColor)
 
