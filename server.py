@@ -56,15 +56,15 @@ class MyHandler(Handler):
         del(handlers[self])
     
     def on_msg(self, msg):
-
-		if 'move' in msg:
-			distribute_msg(msg)
-		if 'load' in msg:
+        if 'move' in msg:
+            distribute_msg(msg)
+        if 'load' in msg:
             countdown()
+            create_players()
+            create_traps()
             distribute_msg("start")
-			create_players
-			create_traps
-			distribute_msg({'players': players, 'traps' : traps})
+
+		# 	# distribute_msg({'players': players, 'traps' : traps})
 
 
 class Serv(Listener):
