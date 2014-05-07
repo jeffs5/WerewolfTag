@@ -1,4 +1,4 @@
- from network import Handler, poll
+from network import Handler, poll
 import sys
 from threading import Thread
 from time import sleep
@@ -11,8 +11,7 @@ import time
 players = []
 player_number = None 
 
-class Client(Handler):
-    
+class Client(Handler): 
 
     def on_close(self):
         pass
@@ -20,20 +19,16 @@ class Client(Handler):
     def on_msg(self, msg):
 		global players
 		global mode
+		global now
 
 		if 'join' in msg:
 			player_number = msg['join']
-			
-		elif 'load' in msg:
+
+		if 'load' in msg:
 			mode = 1
-
-		elif "countdown" in msg:
-			countdown = int(msg['countdown'] + 1)
-
-		elif "start" in msg:
-			mode = 2
 			now = time.time()	
-			return
+
+
         
 host, port = 'localhost', 8888
 client = Client(host, port)
@@ -43,6 +38,8 @@ def periodic_poll():
         poll()
         sleep(0.05)  # seconds
   
+
+
 ##############################
 
 # randomly selects a player to be it at the start of the game
@@ -97,6 +94,7 @@ myfont = pygame.font.SysFont("monospace", 16)
 running = True
 FRAMERATE = 60
 clock = pygame.time.Clock()
+now = time.time()
 
 controls = {pygame.K_LEFT : (-1,0), pygame.K_RIGHT : (1,0), pygame.K_UP : (0,-1), pygame.K_DOWN : (0,1)} # player controls
 
@@ -118,35 +116,36 @@ while running:
 	        screen.blit(instructions, (210, 210))
 
 	        if key[pygame.K_SPACE]:
-	            client.do_send({'load' : 'load'})
+	            client.do_send("load")
 
 	    #get ready stage        
 	    if mode == 1:
 	    	# clear screen
 	        screen.fill((0, 0, 0))
-	        instructions = myfont.render("Get Ready to start!", 1, (255,255,255))
-	        screen.blit(instructions, (210, 210))
 
-
+	        time_up = now + 5
+	        if time.time() < time_up:
+		        instructions = myfont.render("Get Ready to start!", 1, (255,255,255))
+		        countdown = myfont.render("{0}".format(int(time_up-time.time()) + 1) , 1, (255,255,255))
+		        screen.blit(instructions, (210, 210))
+		        screen.blit(countdown, (330, 230))
+	      	else:
+	      		print "done"
 
 	    #actual game
 	    if mode == 2:
-	    	print "mode 2"
 	        time_up = now + 60
 	        if time.time() >= time_up:
 	            mode = 2
 
 	        clock.tick(FRAMERATE)
-	        
+
 	        # Move the player if an arrow key is pressed
-	        
+
 	        for pressed in controls:
 	            if key[pressed]:
 	                instruction = controls.get(pressed)
 	                moving_player = player
-
-	                # used to know what instruction players are currently going to see if they can be pushed
-	                # instruction[2].current_dir = (instruction[0], instruction[1])
 
 	                #if the player has an attribute check if they can still move
 	                if len(moving_player.attributes) > 0:
@@ -156,7 +155,7 @@ while running:
 	                else:
 						moving_player.move(instruction[0], instruction[1], borders, players)
 						client.do_send({'move': instruction, 'player': player.get_player_number()})
-							
+
 
 	        # Draw the scene
 	        screen.fill((0, 0, 0))
@@ -180,11 +179,11 @@ while running:
 	                    player.transform_counter += 1
 
 	            player.draw_player(screen)
-	       
-	        # disclaimertext = myfont.render("Player 1 score: {0}".format(players[0].get_score()) , 1, (255,255,255))
-	        # disclaimertext3 = myfont.render("Time left: {0}".format(round(time_up-time.time(), 2)) , 1, (255,255,255))
-	        # screen.blit(disclaimertext, (16, 400))
-	        # screen.blit(disclaimertext3, (200, 10))
+
+	        disclaimertext = myfont.render("Player 1 score: {0}".format(players[0].get_score()) , 1, (255,255,255))
+	        disclaimertext3 = myfont.render("Time left: {0}".format(round(time_up-time.time(), 2)) , 1, (255,255,255))
+	        screen.blit(disclaimertext, (16, 400))
+	        screen.blit(disclaimertext3, (200, 10))
 
 	    #once the time is up!
 	    if mode == 3:
@@ -205,7 +204,7 @@ while running:
 	            mode = 0
 
 	    pygame.display.flip()
-	    
+
 
 	except KeyboardInterrupt:
 		client.do_send({'close' : 'close'})
