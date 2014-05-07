@@ -1,4 +1,4 @@
-from network import Handler, poll
+ from network import Handler, poll
 import sys
 from threading import Thread
 from time import sleep
@@ -11,7 +11,8 @@ import time
 players = []
 player_number = None 
 
-class Client(Handler): 
+class Client(Handler):
+    
 
     def on_close(self):
         pass
@@ -19,15 +20,12 @@ class Client(Handler):
     def on_msg(self, msg):
 		global players
 		global mode
-		global now
-		global countdown
 
 		if 'join' in msg:
 			player_number = msg['join']
 			
 		elif 'load' in msg:
 			mode = 1
-			now = time.time()	
 
 		elif "countdown" in msg:
 			countdown = int(msg['countdown'] + 1)
@@ -99,8 +97,6 @@ myfont = pygame.font.SysFont("monospace", 16)
 running = True
 FRAMERATE = 60
 clock = pygame.time.Clock()
-now = time.time()
-countdown = 5
 
 controls = {pygame.K_LEFT : (-1,0), pygame.K_RIGHT : (1,0), pygame.K_UP : (0,-1), pygame.K_DOWN : (0,1)} # player controls
 
@@ -128,12 +124,10 @@ while running:
 	    if mode == 1:
 	    	# clear screen
 	        screen.fill((0, 0, 0))
-
-	        #should the client or server have the countdown clock?
 	        instructions = myfont.render("Get Ready to start!", 1, (255,255,255))
-	        countdown_text = myfont.render("{0}".format(countdown), 1, (255,255,255))
 	        screen.blit(instructions, (210, 210))
-	        screen.blit(countdown_text, (300, 230))
+
+
 
 	    #actual game
 	    if mode == 2:
@@ -150,6 +144,9 @@ while running:
 	            if key[pressed]:
 	                instruction = controls.get(pressed)
 	                moving_player = player
+
+	                # used to know what instruction players are currently going to see if they can be pushed
+	                # instruction[2].current_dir = (instruction[0], instruction[1])
 
 	                #if the player has an attribute check if they can still move
 	                if len(moving_player.attributes) > 0:

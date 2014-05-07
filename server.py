@@ -2,7 +2,6 @@ from network import Listener, Handler, poll
 import Player
 import Trap
 from time import sleep
-import time
 
 
 handlers = {}  # map client handler to user name
