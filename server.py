@@ -1,20 +1,37 @@
 from network import Listener, Handler, poll
 import Player
+import Trap
 from time import sleep
 import time
 
 
 handlers = {}  # map client handler to user name
 players = []
+traps = []
 
 def distribute_msg(msg):
 	for handler in handlers:
 		handler.do_send(msg)
 
 def create_players():
-    for handler in handlers:
-        player = Player.Player(random.randint(0,100), random.randint(0,100), handlers[player], players)
-        players.append(player)
+	global players
+
+	# creates one player for each handler
+	for player in handlers:
+		player_spot_occupied = False
+		while not player_spot_occupied:
+			player_number = handlers[player]
+			players.append(Player.Player(random.randint(0,100), random.randint(0,100), player_number))
+
+			# checks if newly created player occupies same space as pany previously created palyer
+			for existing_player in players:
+				if player is not existing_player:
+					if self.rect.colliderect(player.rect):
+						players.remove(player)
+						player_spot_occupied = True
+
+def create_traps():
+	global traps
 
 def countdown():
     now = time.time()
@@ -39,12 +56,15 @@ class MyHandler(Handler):
         del(handlers[self])
     
     def on_msg(self, msg):
-        if 'move' in msg:
-            distribute_msg(msg)
-        if 'load' in msg:
-            distribute_msg(msg)
+
+		if 'move' in msg:
+			distribute_msg(msg)
+		if 'load' in msg:
             countdown()
             distribute_msg("start")
+			create_players
+			create_traps
+			distribute_msg({'players': players, 'traps' : traps})
 
 
 class Serv(Listener):

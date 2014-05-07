@@ -12,4 +12,4 @@ class Trap(object):
 
     def applyEffect(self, player):
     	if effect == boost:
-    		player.
+    		player.speed *= 2
