@@ -1,5 +1,3 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
 from network import Handler, poll
 import sys
 from threading import Thread
@@ -11,15 +9,13 @@ import Player
 import time
 
 players = []
-player_number = None
-powerUp = pygame.Rect(200,400, 16, 16)
+player_number = None 
 
-
-class Client(Handler):
+class Client(Handler): 
 
     def on_close(self):
         pass
-
+    
     def on_msg(self, msg):
         global players
         global mode
@@ -30,28 +26,27 @@ class Client(Handler):
 
         if 'load' in msg:
             mode = 1
-            now = time.time()
+            now = time.time()   
 
 
-(host, port) = ('localhost', 8888)
+        
+host, port = 'localhost', 8888
 client = Client(host, port)
-
 
 def periodic_poll():
     while 1:
         poll()
         sleep(0.05)  # seconds
+  
 
 
 ##############################
 
 # randomly selects a player to be it at the start of the game
 # the "it" player number is the random number + 1
-
 def choose_it(players):
-    it_player = random.randint(0, len(players) - 1)
+    it_player = random.randint(0, len(players)-1)
     players[it_player].becomes_it()
-
 
 #############################
 
@@ -63,55 +58,45 @@ def select_winner(players):
 
     return winner_player
 
-
 ############################
+
+def init_game(num_players, players):
+    for x in range (0, num_players):
+        x_axis = 100 * (x + 1)
+        y_axis = 100 * (x + 1)
+        player = Player.Player(x_axis, y_axis, x+1 , players)
+
+    choose_it(players)
+
 
 ############ MAIN GAME LOOP ##########################
 
 thread = Thread(target=periodic_poll)
-thread.daemon = True  # die when the main thread dies
+thread.daemon = True  # die when the main thread dies 
 thread.start()
 
 ###########################
 
 # Initialise pygame
-
-os.environ['SDL_VIDEO_CENTERED'] = '1'
+os.environ["SDL_VIDEO_CENTERED"] = "1"
 pygame.init()
 
 # Set up the display
-
-pygame.display.set_caption('Play Tag!')
+pygame.display.set_caption("Play Tag!")
 screen = pygame.display.set_mode((640, 440))
 
 mode = 0
 
-borders = [pygame.Rect(0, 0, 640, 1), pygame.Rect(0, 0, 1, 440),
-           pygame.Rect(639, 0, 1, 440), pygame.Rect(0, 439, 640, 1)]
+borders = [pygame.Rect(0,0, 640, 1), pygame.Rect(0,0, 1, 440), pygame.Rect(639,0, 1, 440), pygame.Rect(0,439, 640, 1)]
 
-myfont = pygame.font.SysFont('monospace', 16)
+myfont = pygame.font.SysFont("monospace", 16)
 
 running = True
 FRAMERATE = 60
 clock = pygame.time.Clock()
 now = time.time()
 
-controls = {  # player controls
-    pygame.K_LEFT: (-1, 0),
-    pygame.K_RIGHT: (1, 0),
-    pygame.K_UP: (0, -1),
-    pygame.K_DOWN: (0, 1),
-    }
-
-
-def init_game(num_players, players):
-    for x in range(0, num_players):
-        x_axis = 100 * (x + 1)
-        y_axis = 100 * (x + 1)
-        player = Player.Player(x_axis, y_axis, x + 1, players)
-
-    choose_it(players)
-
+controls = {pygame.K_LEFT : (-1,0), pygame.K_RIGHT : (1,0), pygame.K_UP : (0,-1), pygame.K_DOWN : (0,1)} # player controls
 
 while running:
     try:
@@ -122,44 +107,33 @@ while running:
             if e.type == pygame.KEYDOWN and e.key == pygame.K_ESCAPE:
                 running = False
 
-        # start screen
-
+        #start screen
         if mode == 0:
-            title = myfont.render('Werewolf Tag', 1, (255, 255, 255))
-            intro_message = myfont.render('You are player '
-                    + str(player_number), 1, (255, 255, 255))
-            instructions = \
-                myfont.render('Press SPACE to Start Countdown', 1,
-                              (255, 255, 255))
+            title = myfont.render("Werewolf Tag", 1, (255,255,255))
+            intro_message = myfont.render("You are player " + str(player_number), 1, (255,255,255))
+            instructions = myfont.render("Press SPACE to Start Countdown", 1, (255,255,255))
             screen.blit(title, (240, 10))
             screen.blit(instructions, (210, 210))
 
             if key[pygame.K_SPACE]:
-                client.do_send({'load': 'load'})
+                client.do_send("load")
 
-        # get ready stage
-
+        #get ready stage        
         if mode == 1:
-
             # clear screen
-
             screen.fill((0, 0, 0))
 
             time_up = now + 5
             if time.time() < time_up:
-                instructions = myfont.render('Get Ready to start!', 1,
-                        (255, 255, 255))
-                countdown = myfont.render('{0}'.format(int(time_up
-                        - time.time()) + 1), 1, (255, 255, 255))
+                instructions = myfont.render("Get Ready to start!", 1, (255,255,255))
+                countdown = myfont.render("{0}".format(int(time_up-time.time()) + 1) , 1, (255,255,255))
                 screen.blit(instructions, (210, 210))
                 screen.blit(countdown, (330, 230))
             else:
                 mode = 2
-                client.do_send('load')
-                init_game(2, players)
+                init_game(2 , players)
 
-        # actual game
-
+        #actual game
         if mode == 2:
             print 'here'
             time_up = now + 60
@@ -175,75 +149,53 @@ while running:
                     instruction = controls.get(pressed)
                     moving_player = player
 
-                    # if the player has an attribute check if they can still move
-
+                    #if the player has an attribute check if they can still move
                     if len(moving_player.attributes) > 0:
                         for attribute in moving_player.attributes:
-                            if attribute != 'transforming':
-                                moving_player.move(instruction[0],
-                                        instruction[1], borders,
-                                        players)
+                            if attribute != "transforming":
+                                moving_player.move(instruction[0], instruction[1], borders, players)
                     else:
-                        moving_player.move(instruction[0],
-                                instruction[1], borders, players,powerUp)
-                        # moving_player.move(instruction[0],
-                        #         instruction[1], powerUp, players)
-                        
-                        client.do_send({'move': instruction,
-                                'player': player.get_player_number()})
+                        moving_player.move(instruction[0], instruction[1], borders, players)
+                        client.do_send({'move': instruction, 'player': player.get_player_number()})
+
 
             # Draw the scene
-
             screen.fill((0, 0, 0))
-            pygame.draw.rect(screen, (12, 100, 73), powerUp)
-            
 
-           # pygame.draw.rect(screen, (12, 100, 73), pygame.Rect(200,400, 16, 16))
 
-            # check to see if any player is still transforming
-
+            #check to see if any player is still transforming
             for player in players:
                 player.increase_score(1)
                 for attribute in player.attributes:
-                    if attribute == 'transforming':
+                    if attribute == "transforming":
                         if time.time() >= player.transform_complete:
                             player.finish_transform()
-                        elif player.transform_counter % 18 == 1:
 
-                        # randomly tested modulo numbers were used for the animation
-
+                        #randomly tested modulo numbers were used for the animation
+                        elif player.transform_counter %18 == 1:
                             player.color = (255, 255, 255)
-                        elif player.transform_counter % 6 == 1:
+                        elif player.transform_counter %6 == 1:
                             player.color = (255, 0, 0)
 
-                        # counter used to determine which transformation animation should be shown
-
+                        #counter used to determine which transformation animation should be shown
                         player.transform_counter += 1
 
                 player.draw_player(screen)
 
-            disclaimertext = \
-                myfont.render('Player 1 score: {0}'.format(players[0].get_score()),
-                              1, (255, 255, 255))
-            disclaimertext3 = \
-                myfont.render('Time left: {0}'.format(round(time_up
-                              - time.time(), 2)), 1, (255, 255, 255))
+            disclaimertext = myfont.render("Player 1 score: {0}".format(players[0].get_score()) , 1, (255,255,255))
+            disclaimertext3 = myfont.render("Time left: {0}".format(round(time_up-time.time(), 2)) , 1, (255,255,255))
             screen.blit(disclaimertext, (16, 400))
             screen.blit(disclaimertext3, (200, 10))
 
-        # once the time is up!
-
+        #once the time is up!
         if mode == 3:
-            backgroundColor = (0, 0, 0)
+            backgroundColor = (0,0,0)
             screen.fill(backgroundColor)
 
-            time_up = myfont.render("Time's Up!", 1, (255, 255, 255))
+            time_up = myfont.render("Time's Up!", 1, (255,255,255))
             winner = select_winner(players)
-            winner_text = myfont.render('The winner is: Player '
-                    + str(winner.get_player_number()), 1, (255, 255,
-                    255))
-            restart_text = myfont.render('Press Space to continue', 1,
-                    (255, 255, 255))
+            winner_text = myfont.render("The winner is: Player " + str(winner.get_player_number()), 1, (255,255,255))
+            restart_text = myfont.render("Press Space to continue", 1, (255,255,255))
 
             screen.blit(time_up, (240, 10))
             screen.blit(winner_text, (210, 210))
@@ -254,11 +206,11 @@ while running:
                 mode = 0
 
         pygame.display.flip()
-    except KeyboardInterrupt:
 
-        client.do_send({'close': 'close'})
+
+    except KeyboardInterrupt:
+        client.do_send({'close' : 'close'})
         client.do_close()
         exit()
-
    # mytxt = sys.stdin.readline().rstrip()
    # client.do_send({'speak': myname, 'txt': mytxt})
