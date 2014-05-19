@@ -28,13 +28,13 @@ class Player(object):
         self.speed = 2
         self.transform_counter = 0  # used to know which animation to display during transformation
 
+    # add parrameter for power ups later
     def move(
         self,
         dx,
         dy,
         borders,
         players,
-        powerUp
         ):
 
         # Move each axis separately. Note that this checks for collisions both times.
@@ -43,13 +43,13 @@ class Player(object):
             if dx != 0:
                 self.move_single_axis(dx * self.speed, 0, borders,
                         players)
-                self.powerUp_single_axis(dx * self.speed, 0, powerUp,
-                        players)
+                # self.powerUp_single_axis(dx * self.speed, 0, powerUp,
+                #         players)
             if dy != 0:
                 self.move_single_axis(0, dy * self.speed, borders,
                         players)
-                self.powerUp_single_axis(dy * self.speed, 0, powerUp,
-                        players)
+                # self.powerUp_single_axis(dy * self.speed, 0, powerUp,
+                #         players)
         # else:
         #     if dx != 0:
         #         self.powerUp_single_axis(dx * self.speed, 0, borders,
@@ -155,56 +155,57 @@ class Player(object):
        # if collide == False and self.is_it != True:
        #     self.score -=1
 
-    def powerUp_single_axis(
-        self,
-        dx,
-        dy,
-        powerUp,
-        players,
-        ):
+        # add new parameter for power ups later
+    # def powerUp_single_axis(
+    #     self,
+    #     dx,
+    #     dy,
+    #     powerUp,
+    #     players,
+    #     ):
 
-        # Move the rect
+    #     # Move the rect
 
-        collide = False
-        self.rect.x += dx
-        self.rect.y += dy
+    #     collide = False
+    #     self.rect.x += dx
+    #     self.rect.y += dy
 
-        # If you collide with a powerUp
-        if self.rect.colliderect(powerUp):
-          collide = True
-          print("Hit")
-          self.speed = self.speed * 2
+    #     # If you collide with a powerUp
+    #     if self.rect.colliderect(powerUp):
+    #       collide = True
+    #       print("Hit")
+    #       self.speed = self.speed * 2
           
-          # if dx > 0:
-          #     self.rect.right = borders.left
-          # if dx < 0:
-          #     self.rect.left = borders.right
-          # if dy > 0:
-          #     self.rect.bottom = borders.top
-          # if dy < 0:
-          #     self.rect.top = borders.bottom
-        for player in players:
-            if self != player:
-                if self.rect.colliderect(player.rect):
-                    collide = True
+    #       # if dx > 0:
+    #       #     self.rect.right = borders.left
+    #       # if dx < 0:
+    #       #     self.rect.left = borders.right
+    #       # if dy > 0:
+    #       #     self.rect.bottom = borders.top
+    #       # if dy < 0:
+    #       #     self.rect.top = borders.bottom
+    #     for player in players:
+    #         if self != player:
+    #             if self.rect.colliderect(player.rect):
+    #                 collide = True
 
-                    if dx > 0:
-                        self.rect.right = player.rect.left
-                    if dx < 0:
-                        self.rect.left = player.rect.right
-                    if dy > 0:
-                        self.rect.bottom = player.rect.top
-                    if dy < 0:
-                        self.rect.top = player.rect.bottom
+    #                 if dx > 0:
+    #                     self.rect.right = player.rect.left
+    #                 if dx < 0:
+    #                     self.rect.left = player.rect.right
+    #                 if dy > 0:
+    #                     self.rect.bottom = player.rect.top
+    #                 if dy < 0:
+    #                     self.rect.top = player.rect.bottom
 
-                        # add transform period where it player cannot move and no one can be tagged
+    #                     # add transform period where it player cannot move and no one can be tagged
 
-                    if self.is_it:
-                        player = player.becomes_it()
-                        self = self.becomes_not_it()
-                    elif self.is_it != True and player.is_it:
-                        player = player.becomes_not_it()
-                        self = self.becomes_it()
+    #                 if self.is_it:
+    #                     player = player.becomes_it()
+    #                     self = self.becomes_not_it()
+    #                 elif self.is_it != True and player.is_it:
+    #                     player = player.becomes_not_it()
+    #                     self = self.becomes_it()
         if not collide:
             self.score -= 1
 
