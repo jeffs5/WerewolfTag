@@ -32,7 +32,6 @@ class Client(Handler):
             now = time.time()  
 
         elif 'move' in msg:
-            print msg
             moved_player = msg['player']
             player = players[moved_player]
             move_player(player, msg['move'])
