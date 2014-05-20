@@ -32,9 +32,13 @@ class Client(Handler):
             now = time.time()  
 
         elif 'move' in msg:
+            print msg
             moved_player = msg['player']
             player = players[moved_player]
             move_player(player, msg['move'])
+
+        else:
+            print msg
 
         
 host, port = 'localhost', 8888
@@ -80,9 +84,9 @@ def move_player(player, instruction):
 
 ############ MAIN GAME LOOP ##########################
 
-thread = Thread(target=periodic_poll)
-thread.daemon = True  # die when the main thread dies 
-thread.start()
+# thread = Thread(target=periodic_poll)
+# thread.daemon = True  # die when the main thread dies 
+# thread.start()
 
 ###########################
 
@@ -110,6 +114,7 @@ controls = {pygame.K_LEFT : (-1,0), pygame.K_RIGHT : (1,0), pygame.K_UP : (0,-1)
 
 while running:
     try:
+        poll()
         key = pygame.key.get_pressed()
         for e in pygame.event.get():
             if e.type == pygame.QUIT:
@@ -166,6 +171,8 @@ while running:
                                 if attribute != "transforming":
                                     client.do_send({'move': instruction, 'player': moving_player.get_player_number()})
                         else:
+                            print instruction
+                            print moving_player.get_player_number()
                             client.do_send({'move': instruction, 'player': moving_player.get_player_number()})
 
 

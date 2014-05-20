@@ -53,7 +53,7 @@ class MyHandler(Handler):
         self.do_send({'join': player_number})
         
     def on_close(self):
-        global players_ready, players
+        global players_ready, players, handlers
         del(handlers[self])
         players = {}
         players_ready = 0
@@ -74,7 +74,7 @@ class MyHandler(Handler):
                 choose_wolf()
                 distribute_msg({"start_state": players})
         else:
-            print "i don't even know!"
+            print msg
 
 #########################################
 
