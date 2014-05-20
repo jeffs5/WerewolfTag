@@ -170,8 +170,6 @@ while running:
                                 if attribute != "transforming":
                                     client.do_send({'move': instruction, 'player': moving_player.get_player_number()})
                         else:
-                            print instruction
-                            print moving_player.get_player_number()
                             client.do_send({'move': instruction, 'player': moving_player.get_player_number()})
 
 
