@@ -24,9 +24,14 @@ class Client(Handler):
         if 'join' in msg:
             player_number = msg['join']
 
-        if 'load' in msg:
+        elif 'load' in msg:
             mode = 1
-            now = time.time()   
+            now = time.time()
+
+        elif 'start_state' in msg:
+            init_game(msg['start_state'])
+            mode = 2
+            now = time.time()  
 
 
         
@@ -60,14 +65,20 @@ def select_winner(players):
 
 ############################
 
-def init_game(num_players, players):
-    for x in range (0, num_players):
-        x_axis = 100 * (x + 1)
-        y_axis = 100 * (x + 1)
-        player = Player.Player(x_axis, y_axis, x+1 , players)
+def init_game(player_msg):
+    number = 1
+    for player in player_msg.items():
+        player_info = player[1]
+        x_axis = player_info[0]
+        y_axis = player_info[1]
+        new_player = Player.Player(x_axis, y_axis, number , players)
 
-    choose_it(players)
+        if player_info[2] == 'wolf':
+            new_player.becomes_it()
 
+        number += 1
+
+        players.append(new_player)
 
 ############ MAIN GAME LOOP ##########################
 
@@ -86,6 +97,7 @@ pygame.display.set_caption("Play Tag!")
 screen = pygame.display.set_mode((640, 440))
 
 mode = 0
+ready = False
 
 borders = [pygame.Rect(0,0, 640, 1), pygame.Rect(0,0, 1, 440), pygame.Rect(639,0, 1, 440), pygame.Rect(0,439, 640, 1)]
 
@@ -113,7 +125,7 @@ while running:
             intro_message = myfont.render("You are player " + str(player_number), 1, (255,255,255))
             instructions = myfont.render("Press SPACE to Start Countdown", 1, (255,255,255))
             screen.blit(title, (240, 10))
-            screen.blit(instructions, (210, 210))
+            screen.blit(instructions, (160, 210))
 
             if key[pygame.K_SPACE]:
                 client.do_send("load")
@@ -128,64 +140,64 @@ while running:
                 instructions = myfont.render("Get Ready to start!", 1, (255,255,255))
                 countdown = myfont.render("{0}".format(int(time_up-time.time()) + 1) , 1, (255,255,255))
                 screen.blit(instructions, (210, 210))
-                screen.blit(countdown, (330, 230))
-            else:
-                mode = 2
-                init_game(2 , players)
+                screen.blit(countdown, (300, 230))
+            elif ready == False:
+                ready = True
+                client.do_send("ready")
 
         #actual game
         if mode == 2:
-            print 'here'
             time_up = now + 60
             if time.time() >= time_up:
-                mode = 2
+                mode = 3
 
-            clock.tick(FRAMERATE)
+            else:
+                clock.tick(FRAMERATE)
 
-            # Move the player if an arrow key is pressed
+                # Move the player if an arrow key is pressed
 
-            for pressed in controls:
-                if key[pressed]:
-                    instruction = controls.get(pressed)
-                    moving_player = player
+                for pressed in controls:
+                    if key[pressed]:
+                        instruction = controls.get(pressed)
+                        moving_player = player
 
-                    #if the player has an attribute check if they can still move
-                    if len(moving_player.attributes) > 0:
-                        for attribute in moving_player.attributes:
-                            if attribute != "transforming":
-                                moving_player.move(instruction[0], instruction[1], borders, players)
-                    else:
-                        moving_player.move(instruction[0], instruction[1], borders, players)
-                        client.do_send({'move': instruction, 'player': player.get_player_number()})
-
-
-            # Draw the scene
-            screen.fill((0, 0, 0))
+                        #if the player has an attribute check if they can still move
+                        if len(moving_player.attributes) > 0:
+                            for attribute in moving_player.attributes:
+                                if attribute != "transforming":
+                                    moving_player.move(instruction[0], instruction[1], borders, players)
+                        else:
+                            moving_player.move(instruction[0], instruction[1], borders, players)
+                            client.do_send({'move': instruction, 'player': player.get_player_number()})
 
 
-            #check to see if any player is still transforming
-            for player in players:
-                player.increase_score(1)
-                for attribute in player.attributes:
-                    if attribute == "transforming":
-                        if time.time() >= player.transform_complete:
-                            player.finish_transform()
+                # Draw the scene
+                screen.fill((0, 0, 0))
 
-                        #randomly tested modulo numbers were used for the animation
-                        elif player.transform_counter %18 == 1:
-                            player.color = (255, 255, 255)
-                        elif player.transform_counter %6 == 1:
-                            player.color = (255, 0, 0)
 
-                        #counter used to determine which transformation animation should be shown
-                        player.transform_counter += 1
+                #check to see if any player is still transforming
+                for player in players:
+                    player.increase_score(1)
+                    for attribute in player.attributes:
+                        if attribute == "transforming":
+                            if time.time() >= player.transform_complete:
+                                player.finish_transform()
 
-                player.draw_player(screen)
+                            #randomly tested modulo numbers were used for the animation
+                            elif player.transform_counter %18 == 1:
+                                player.color = (255, 255, 255)
+                            elif player.transform_counter %6 == 1:
+                                player.color = (255, 0, 0)
 
-            disclaimertext = myfont.render("Player 1 score: {0}".format(players[0].get_score()) , 1, (255,255,255))
-            disclaimertext3 = myfont.render("Time left: {0}".format(round(time_up-time.time(), 2)) , 1, (255,255,255))
-            screen.blit(disclaimertext, (16, 400))
-            screen.blit(disclaimertext3, (200, 10))
+                            #counter used to determine which transformation animation should be shown
+                            player.transform_counter += 1
+
+                    player.draw_player(screen)
+
+                disclaimertext = myfont.render("Player 1 score: {0}".format(players[0].get_score()) , 1, (255,255,255))
+                disclaimertext3 = myfont.render("Time left: {0}".format(round(time_up-time.time(), 2)) , 1, (255,255,255))
+                screen.blit(disclaimertext, (16, 400))
+                screen.blit(disclaimertext3, (200, 10))
 
         #once the time is up!
         if mode == 3:
@@ -212,5 +224,3 @@ while running:
         client.do_send({'close' : 'close'})
         client.do_close()
         exit()
-   # mytxt = sys.stdin.readline().rstrip()
-   # client.do_send({'speak': myname, 'txt': mytxt})
