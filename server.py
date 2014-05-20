@@ -24,7 +24,7 @@ def create_players():
 # randomly selects a player to be it at the start of the game
 # the "it" player number is the random number + 1
 def choose_wolf():
-    it_player = random.randint(0, len(players))
+    it_player = random.randint(1, len(players))
     players[it_player][2] = 'wolf'
 
 ###########################################
@@ -36,7 +36,7 @@ class MyHandler(Handler):
     def on_open(self):
         player_number = len(handlers) + 1
         handlers[self] = player_number
-        distribute_msg({'join': player_number})
+        self.do_send({'join': player_number})
         
     def on_close(self):
         global players_ready, players

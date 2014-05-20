@@ -17,12 +17,11 @@ class Client(Handler):
         pass
     
     def on_msg(self, msg):
-        global players
-        global mode
-        global now
+        global players, mode, now, player_number
 
         if 'join' in msg:
-            player_number = msg['join']
+            player_number = msg['join'] 
+            print player_number
 
         elif 'load' in msg:
             mode = 1
@@ -33,6 +32,10 @@ class Client(Handler):
             mode = 2
             now = time.time()  
 
+        elif 'move' in msg:
+            moved_player = msg['player']
+            player = players[moved_player]
+            move_player(player, msg['move'])
 
         
 host, port = 'localhost', 8888
@@ -43,15 +46,6 @@ def periodic_poll():
         poll()
         sleep(0.05)  # seconds
   
-
-
-##############################
-
-# randomly selects a player to be it at the start of the game
-# the "it" player number is the random number + 1
-def choose_it(players):
-    it_player = random.randint(0, len(players)-1)
-    players[it_player].becomes_it()
 
 #############################
 
@@ -79,6 +73,11 @@ def init_game(player_msg):
         number += 1
 
         players.append(new_player)
+
+#############################
+
+def move_player(player, instruction):
+    player.move(instruction[0], instruction[1], borders, players)
 
 ############ MAIN GAME LOOP ##########################
 
@@ -125,6 +124,7 @@ while running:
             intro_message = myfont.render("You are player " + str(player_number), 1, (255,255,255))
             instructions = myfont.render("Press SPACE to Start Countdown", 1, (255,255,255))
             screen.blit(title, (240, 10))
+            screen.blit(intro_message, (210, 190))
             screen.blit(instructions, (160, 210))
 
             if key[pygame.K_SPACE]:
@@ -159,15 +159,14 @@ while running:
                 for pressed in controls:
                     if key[pressed]:
                         instruction = controls.get(pressed)
-                        moving_player = player
+                        moving_player = players[player_number]
 
                         #if the player has an attribute check if they can still move
                         if len(moving_player.attributes) > 0:
                             for attribute in moving_player.attributes:
                                 if attribute != "transforming":
-                                    moving_player.move(instruction[0], instruction[1], borders, players)
+                                    client.do_send({'move': instruction, 'player': player.get_player_number()})
                         else:
-                            moving_player.move(instruction[0], instruction[1], borders, players)
                             client.do_send({'move': instruction, 'player': player.get_player_number()})
 
 
