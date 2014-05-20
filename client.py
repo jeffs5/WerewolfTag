@@ -34,6 +34,7 @@ class Client(Handler):
 
         elif 'move' in msg:
             moved_player = msg['player']
+            print "player moving: " + str(moved_player) + ": " + str(player_number)
             player = players[moved_player]
             move_player(player, msg['move'])
 
@@ -165,9 +166,9 @@ while running:
                         if len(moving_player.attributes) > 0:
                             for attribute in moving_player.attributes:
                                 if attribute != "transforming":
-                                    client.do_send({'move': instruction, 'player': player.get_player_number()})
+                                    client.do_send({'move': instruction, 'player': moving_player.get_player_number()})
                         else:
-                            client.do_send({'move': instruction, 'player': player.get_player_number()})
+                            client.do_send({'move': instruction, 'player': moving_player.get_player_number()})
 
 
                 # Draw the scene
