@@ -21,7 +21,6 @@ class Client(Handler):
 
         if 'join' in msg:
             player_number = msg['join'] 
-            print player_number
 
         elif 'load' in msg:
             mode = 1
@@ -34,7 +33,6 @@ class Client(Handler):
 
         elif 'move' in msg:
             moved_player = msg['player']
-            print "player moving: " + str(moved_player) + ": " + str(player_number)
             player = players[moved_player]
             move_player(player, msg['move'])
 
