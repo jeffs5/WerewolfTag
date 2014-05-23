@@ -28,7 +28,7 @@ def create_players():
 # randomly selects a player to be it at the start of the game
 # the "it" player number is the random number + 1
 def choose_wolf():
-    it_player = random.randint(1, len(players))
+    it_player = random.randint(0, len(players) - 1)
     players[it_player][2] = 'wolf'
 
 def colliding(x1, y1):

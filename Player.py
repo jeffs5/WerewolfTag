@@ -15,7 +15,7 @@ class Player(object):
         value,
         ):
         
-        self.playerNumber = value
+        self.playerNumber = int(value)
         self.rect = pygame.Rect(x, y, 16, 16)
         self.color = (255, 255, 255)
         self.is_it = False

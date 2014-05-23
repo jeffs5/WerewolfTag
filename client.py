@@ -10,6 +10,7 @@ import time
 
 players = []
 player_number = None 
+GAME_LENGTH = 30
 
 class Client(Handler): 
 
@@ -52,12 +53,12 @@ def periodic_poll():
 #############################
 
 def select_winner(players):
-    winner_player = players[0]
+    winner = players[0]
     for player in players:
-        if player.get_score() > winner_player.get_score():
-            winner_player = player
+        if player.get_score() > winner.get_score():
+            winner = player
 
-    return winner_player
+    return winner
 
 ############################
 
@@ -117,7 +118,7 @@ while running:
         #start screen
         if mode == 0:
             title = myfont.render("Werewolf Tag", 1, (255,255,255))
-            intro_message = myfont.render("You are player " + str(player_number), 1, (255,255,255))
+            intro_message = myfont.render("You are player {0}".format(player_number, now), 1, (255,255,255))
             instructions = myfont.render("Press SPACE to Start Countdown", 1, (255,255,255))
             screen.blit(title, (240, 10))
             screen.blit(intro_message, (210, 190))
@@ -143,7 +144,8 @@ while running:
 
         #actual game
         if mode == 2:
-            time_up = now + 60
+            ## change for time
+            time_up = now + GAME_LENGTH
             if time.time() >= time_up:
                 mode = 3
 
@@ -155,7 +157,7 @@ while running:
                 for pressed in controls:
                     if key[pressed]:
                         instruction = controls.get(pressed)
-                        moving_player = players[player_number-1]
+                        moving_player = players[player_number]
 
                         #if the player has an attribute check if they can still move
                         if len(moving_player.attributes) > 0:
@@ -179,18 +181,18 @@ while running:
                                 player.finish_transform()
 
                             #randomly tested modulo numbers were used for the animation
-                            elif player.transform_counter %18 == 1:
+                            elif player.transform_counter % 18 == 1:
                                 player.color = (255, 255, 255)
-                            elif player.transform_counter %6 == 1:
+                            elif player.transform_counter % 6 == 1:
                                 player.color = (255, 0, 0)
 
                             #counter used to determine which transformation animation should be shown
                             player.transform_counter += 1
 
                     player.draw_player(screen)
-
-                disclaimertext = myfont.render("Player {0} score: {1}".format(player_number, players[player_number].get_score()) , 1, (255,255,255))
-                disclaimertext3 = myfont.render("Time left: {0}".format(round(time_up-time.time(), 2)) , 1, (255,255,255))
+                display_number = player_number + 1
+                disclaimertext = myfont.render("Player: {0}, score: {1}".format(display_number, players[player_number].get_score()) , 1, (255,255,255))
+                disclaimertext3 = myfont.render("Time left: {0}".format(round(time_up - time.time(), 2)) , 1, (255,255,255))
                 screen.blit(disclaimertext, (16, 400))
                 screen.blit(disclaimertext3, (200, 10))
 
@@ -201,12 +203,15 @@ while running:
 
             time_up = myfont.render("Time's Up!", 1, (255,255,255))
             winner = select_winner(players)
-            winner_text = myfont.render("The winner is: Player " + str(winner.get_player_number()), 1, (255,255,255))
+            winner_number = winner.get_player_number() + 1
+            winner_text = myfont.render("The winner is: Player {0} with a score of {1}".format(winner_number, winner.get_score()), 1, (255,255,255))
+            your_text = myfont.render("Your score was: {0} ".format(players[player_number].get_score()), 1, (255,255,255))
             restart_text = myfont.render("Press Space to continue", 1, (255,255,255))
 
             screen.blit(time_up, (240, 10))
-            screen.blit(winner_text, (210, 210))
-            screen.blit(restart_text, (210, 220))
+            screen.blit(winner_text, (180, 210))
+            screen.blit(your_text, (180, 225))
+            screen.blit(restart_text, (180, 235))
 
             if key[pygame.K_SPACE]:
                 players = []
