@@ -33,7 +33,7 @@ class Client(Handler):
 
         elif 'move' in msg:
             moved_player = msg['player']
-            player = players[moved_player]
+            player = players[moved_player-1]
             move_player(player, msg['move'])
 
         else:
@@ -67,7 +67,7 @@ def init_game(player_msg):
         player_info = player[1]
         x_axis = player_info[0]
         y_axis = player_info[1]
-        new_player = Player.Player(x_axis, y_axis, number , players)
+        new_player = Player.Player(x_axis, y_axis, number)
 
         if player_info[2] == 'wolf':
             new_player.becomes_it()
@@ -75,19 +75,12 @@ def init_game(player_msg):
         number += 1
 
         players.append(new_player)
+        print len(players)
 
 #############################
 
 def move_player(player, instruction):
     player.move(instruction[0], instruction[1], borders, players)
-
-############ MAIN GAME LOOP ##########################
-
-# thread = Thread(target=periodic_poll)
-# thread.daemon = True  # die when the main thread dies 
-# thread.start()
-
-###########################
 
 # Initialise pygame
 os.environ["SDL_VIDEO_CENTERED"] = "1"
@@ -162,15 +155,15 @@ while running:
                 for pressed in controls:
                     if key[pressed]:
                         instruction = controls.get(pressed)
-                        moving_player = players[player_number]
+                        moving_player = players[player_number-1]
 
                         #if the player has an attribute check if they can still move
                         if len(moving_player.attributes) > 0:
                             for attribute in moving_player.attributes:
                                 if attribute != "transforming":
-                                    client.do_send({'move': instruction, 'player': moving_player.get_player_number()})
+                                    client.do_send({'move': instruction, 'player': player_number})
                         else:
-                            client.do_send({'move': instruction, 'player': moving_player.get_player_number()})
+                            client.do_send({'move': instruction, 'player': player_number})
 
 
                 # Draw the scene

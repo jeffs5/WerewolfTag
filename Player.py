@@ -13,11 +13,9 @@ class Player(object):
         x,
         y,
         value,
-        players,
         ):
         
         self.playerNumber = value
-        players.append(self)
         self.rect = pygame.Rect(x, y, 16, 16)
         self.color = (255, 255, 255)
         self.is_it = False
