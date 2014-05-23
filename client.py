@@ -33,7 +33,7 @@ class Client(Handler):
 
         elif 'move' in msg:
             moved_player = msg['player']
-            player = players[moved_player-1]
+            player = players[moved_player]
             move_player(player, msg['move'])
 
         else:
@@ -67,7 +67,7 @@ def init_game(player_msg):
         player_info = player[1]
         x_axis = player_info[0]
         y_axis = player_info[1]
-        new_player = Player.Player(x_axis, y_axis, number)
+        new_player = Player.Player(x_axis, y_axis, player[0])
 
         if player_info[2] == 'wolf':
             new_player.becomes_it()
@@ -189,7 +189,7 @@ while running:
 
                     player.draw_player(screen)
 
-                disclaimertext = myfont.render("Player 1 score: {0}".format(players[0].get_score()) , 1, (255,255,255))
+                disclaimertext = myfont.render("Player {0} score: {1}".format(player_number, players[player_number].get_score()) , 1, (255,255,255))
                 disclaimertext3 = myfont.render("Time left: {0}".format(round(time_up-time.time(), 2)) , 1, (255,255,255))
                 screen.blit(disclaimertext, (16, 400))
                 screen.blit(disclaimertext3, (200, 10))
