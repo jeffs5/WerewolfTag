@@ -148,7 +148,10 @@ class Player(object):
                         player = player.becomes_not_it()
                         self = self.becomes_it()
         if not collide:
-            self.score -= 1
+            if self.score >= 0:
+                self.score -= 1
+            else:
+                self.score = 0
 
        # if collide == False and self.is_it != True:
        #     self.score -=1
@@ -204,8 +207,8 @@ class Player(object):
     #                 elif self.is_it != True and player.is_it:
     #                     player = player.becomes_not_it()
     #                     self = self.becomes_it()
-        if not collide:
-            self.score -= 1
+        # if not collide:
+        #     self.score -= 1
 
        # if collide == False and self.is_it != True:
        #     self.score -=1

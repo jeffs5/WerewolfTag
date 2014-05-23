@@ -76,12 +76,39 @@ def init_game(player_msg):
         number += 1
 
         players.append(new_player)
-        print len(players)
 
 #############################
 
 def move_player(player, instruction):
     player.move(instruction[0], instruction[1], borders, players)
+
+#############################
+
+def print_game_stats():
+    player_score = myfont.render(
+        "Player: {0}, score: {1}".format(display_number, players[player_number].get_score()) , 1, (255,255,255))
+    time_left = myfont.render("Time left: {0}".format(int(time_up-time.time()) + 1) , 1, (255,255,255))
+    screen.blit(player_score, (16, 400))
+    screen.blit(time_left, (220, 10))
+
+#############################
+
+def print_end_game():
+    time_up = myfont.render("Time's Up!", 1, (255,255,255))
+    winner = select_winner(players)
+    winner_number = winner.get_player_number() + 1
+    winner_text = myfont.render(
+        "The winner is: Player {0} with a score of {1}".format(winner_number, winner.get_score()), 1, (255,255,255))
+    your_text = myfont.render("Your score was: {0} ".format(players[player_number].get_score()), 1, (255,255,255))
+    restart_text = myfont.render("Press Space to continue", 1, (255,255,255))
+
+    screen.blit(time_up, (240, 10))
+    screen.blit(winner_text, (110, 210))
+    screen.blit(your_text, (200, 225))
+    screen.blit(restart_text, (180, 235))
+
+###########################
+
 
 # Initialise pygame
 os.environ["SDL_VIDEO_CENTERED"] = "1"
@@ -99,7 +126,7 @@ borders = [pygame.Rect(0,0, 640, 1), pygame.Rect(0,0, 1, 440), pygame.Rect(639,0
 myfont = pygame.font.SysFont("monospace", 16)
 
 running = True
-FRAMERATE = 60
+FRAMERATE = 40
 clock = pygame.time.Clock()
 now = time.time()
 
@@ -118,7 +145,7 @@ while running:
         #start screen
         if mode == 0:
             title = myfont.render("Werewolf Tag", 1, (255,255,255))
-            intro_message = myfont.render("You are player {0}".format(player_number, now), 1, (255,255,255))
+            intro_message = myfont.render("You are player {0}".format(player_number + 1), 1, (255,255,255))
             instructions = myfont.render("Press SPACE to Start Countdown", 1, (255,255,255))
             screen.blit(title, (240, 10))
             screen.blit(intro_message, (210, 190))
@@ -191,27 +218,13 @@ while running:
 
                     player.draw_player(screen)
                 display_number = player_number + 1
-                disclaimertext = myfont.render("Player: {0}, score: {1}".format(display_number, players[player_number].get_score()) , 1, (255,255,255))
-                disclaimertext3 = myfont.render("Time left: {0}".format(round(time_up - time.time(), 2)) , 1, (255,255,255))
-                screen.blit(disclaimertext, (16, 400))
-                screen.blit(disclaimertext3, (200, 10))
+                print_game_stats()
 
         #once the time is up!
         if mode == 3:
             backgroundColor = (0,0,0)
             screen.fill(backgroundColor)
-
-            time_up = myfont.render("Time's Up!", 1, (255,255,255))
-            winner = select_winner(players)
-            winner_number = winner.get_player_number() + 1
-            winner_text = myfont.render("The winner is: Player {0} with a score of {1}".format(winner_number, winner.get_score()), 1, (255,255,255))
-            your_text = myfont.render("Your score was: {0} ".format(players[player_number].get_score()), 1, (255,255,255))
-            restart_text = myfont.render("Press Space to continue", 1, (255,255,255))
-
-            screen.blit(time_up, (240, 10))
-            screen.blit(winner_text, (180, 210))
-            screen.blit(your_text, (180, 225))
-            screen.blit(restart_text, (180, 235))
+            print_end_game()
 
             if key[pygame.K_SPACE]:
                 players = []
