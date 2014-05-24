@@ -10,7 +10,7 @@ import time
 
 players = []
 player_number = None 
-GAME_LENGTH = 30
+GAME_LENGTH = 5
 
 class Client(Handler): 
 
@@ -18,12 +18,13 @@ class Client(Handler):
         pass
     
     def on_msg(self, msg):
-        global players, mode, now, player_number
+        global players, mode, now, player_number, loading
 
         if 'join' in msg:
             player_number = msg['join'] 
 
         elif 'load' in msg:
+            loading = False
             mode = 1
             now = time.time()
 
@@ -48,17 +49,6 @@ def periodic_poll():
     while 1:
         poll()
         sleep(0.05)  # seconds
-  
-
-#############################
-
-def select_winner(players):
-    winner = players[0]
-    for player in players:
-        if player.get_score() > winner.get_score():
-            winner = player
-
-    return winner
 
 ############################
 
@@ -84,14 +74,30 @@ def move_player(player, instruction):
 
 #############################
 
+def select_winner(players):
+    winner = players[0]
+    for player in players:
+        if player.get_score() > winner.get_score():
+            winner = player
+
+    return winner
+
+########## Print Screens ###################
+
+def print_title():
+    title = myfont.render("Werewolf Tag", 1, (255,255,255))
+    intro_message = myfont.render("You are player {0}".format(player_number + 1), 1, (255,255,255))
+    instructions = myfont.render("Press SPACE to Start Countdown", 1, (255,255,255))
+    screen.blit(title, (240, 10))
+    screen.blit(intro_message, (210, 190))
+    screen.blit(instructions, (160, 210))
+
 def print_game_stats():
     player_score = myfont.render(
         "Player: {0}, score: {1}".format(display_number, players[player_number].get_score()) , 1, (255,255,255))
     time_left = myfont.render("Time left: {0}".format(int(time_up-time.time()) + 1) , 1, (255,255,255))
     screen.blit(player_score, (16, 400))
     screen.blit(time_left, (220, 10))
-
-#############################
 
 def print_end_game():
     time_up = myfont.render("Time's Up!", 1, (255,255,255))
@@ -119,6 +125,7 @@ pygame.display.set_caption("Play Tag!")
 screen = pygame.display.set_mode((640, 440))
 
 mode = 0
+loading = False
 ready = False
 
 borders = [pygame.Rect(0,0, 640, 1), pygame.Rect(0,0, 1, 440), pygame.Rect(639,0, 1, 440), pygame.Rect(0,439, 640, 1)]
@@ -144,17 +151,15 @@ while running:
 
         #start screen
         if mode == 0:
-            title = myfont.render("Werewolf Tag", 1, (255,255,255))
-            intro_message = myfont.render("You are player {0}".format(player_number + 1), 1, (255,255,255))
-            instructions = myfont.render("Press SPACE to Start Countdown", 1, (255,255,255))
-            screen.blit(title, (240, 10))
-            screen.blit(intro_message, (210, 190))
-            screen.blit(instructions, (160, 210))
+            screen.fill((0, 0, 0))
+            print_title()
 
             if key[pygame.K_SPACE]:
-                client.do_send("load")
+                if not loading:
+                    loading = True
+                    client.do_send("load")
 
-        #get ready stage        
+        #countdown screen       
         if mode == 1:
             # clear screen
             screen.fill((0, 0, 0))
@@ -227,7 +232,6 @@ while running:
             print_end_game()
 
             if key[pygame.K_SPACE]:
-                players = []
                 mode = 0
 
         pygame.display.flip()
