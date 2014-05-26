@@ -116,7 +116,7 @@ class View():
         #once the time is up!
         if self.m.mode == 3:
             backgroundColor = (0,0,0)
-            screen.fill(backgroundColor)
+            self.screen.fill(backgroundColor)
             self.print_end_game()
 
         pygame.display.flip()
@@ -158,8 +158,9 @@ class View():
 ##################  CONTROLLER #######################
 
 class Controller():
-    def __init__(self, model):
+    def __init__(self, model, network):
         self.m = model
+        self.n = network
         self.controls = {pygame.K_LEFT : (-1,0), pygame.K_RIGHT : (1,0), pygame.K_UP : (0,-1), pygame.K_DOWN : (0,1)} # player controls
 
         
@@ -211,9 +212,10 @@ class Controller():
                         if len(moving_player.attributes) > 0:
                             for attribute in moving_player.attributes:
                                 if attribute != "transforming":
-                                   return {'move': instruction, 'player': self.m.player_number}
+                                    ##problem since it returns on the first one
+                                   n.do_send({'move': instruction, 'player': self.m.player_number})
                         else:
-                            return {'move': instruction, 'player': self.m.player_number}
+                            n.do_send({'move': instruction, 'player': self.m.player_number})
 
                 #check to see if any player is still transforming
                 for player in self.m.players:
@@ -235,9 +237,6 @@ class Controller():
         return "no message"
 
 
-    def move_player(self, player, instruction):
-        player.move(instruction[0], instruction[1], self.m.borders, self.m.players)
-
     def select_winner(players):
         winner = self.m.players[0]
         for player in self.m.players:
@@ -250,10 +249,9 @@ class Controller():
 
 class NetworkController(Handler): 
 
-    def __init__(self, controller, model, host, port):
+    def __init__(self, model, host, port):
         Handler.__init__(self, host, port)
         self.m = model
-        self.c = controller
 
     def on_close(self):
         pass ## no need for it to do anything
@@ -277,11 +275,14 @@ class NetworkController(Handler):
         elif 'move' in msg:
             moved_player = msg['player']
             player = self.m.players[moved_player]
-            self.c.move_player(player, msg['move'])
+            self.move_player(player, msg['move'])
 
             #used for error handling
         else:
             print msg
+
+    def move_player(self, player, instruction):
+        player.move(instruction[0], instruction[1], self.m.borders, self.m.players)
 
     def send_message(self, message):
         self.do_send(message)
@@ -297,8 +298,8 @@ host, port = 'localhost', 8888
 
 m = Model()
 v = View(m)
-c = Controller(m)
-n = NetworkController(c, m, host, port)
+n = NetworkController(m, host, port)
+c = Controller(m,n )
 
 while m.running:
     try:
