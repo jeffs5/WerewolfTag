@@ -142,7 +142,7 @@ class View():
 
     def print_end_game(self):
         time_up = self.myfont.render("Time's Up!", 1, (255,255,255))
-        winner = select_winner(self.m.players)
+        winner = self.select_winner(self.m.players)
         winner_number = winner.get_player_number() + 1
         winner_text = self.myfont.render(
             "The winner is: Player {0} with a score of {1}".format(winner_number, winner.get_score()), 1, (255,255,255))
@@ -153,6 +153,14 @@ class View():
         self.screen.blit(winner_text, (110, 210))
         self.screen.blit(your_text, (200, 225))
         self.screen.blit(restart_text, (180, 235))
+
+    def select_winner(self, players):
+        winner = self.m.players[0]
+        for player in self.m.players:
+            if player.get_score() > winner.get_score():
+                winner = player
+
+        return winner
 
 
 ##################  CONTROLLER #######################
@@ -236,14 +244,6 @@ class Controller():
 
         return "no message"
 
-
-    def select_winner(players):
-        winner = self.m.players[0]
-        for player in self.m.players:
-            if player.get_score() > winner.get_score():
-                winner = player
-
-        return winner
 
 ##################  NETWORK CONTROLLER ###############
 
