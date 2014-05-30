@@ -7,6 +7,7 @@ import random
 handlers = {}  # map client handler to user name
 players = {}
 players_ready = 0
+game_running = False
 
 #########################################
 
@@ -50,7 +51,7 @@ class MyHandler(Handler):
         global handlers
         player_number = len(handlers)
         handlers[self] = player_number
-        self.do_send({'join': player_number})
+        self.do_send({'join': player_number, 'game_running': game_running})
         
     def on_close(self):
         global players_ready, players, handlers
@@ -72,8 +73,10 @@ class MyHandler(Handler):
             if players_ready == len(handlers):
                 create_players()
                 choose_wolf()
-                distribute_msg({"start_state": players})
+                game_running = True
+                distribute_msg({"start_state": players, 'game_running': game_running})
         elif 'restart' in msg:
+           game_running = False
            distribute_msg({"restart": 'restart'})
            handlers = {}  # map client handler to user name
            players = {}
