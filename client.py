@@ -65,6 +65,7 @@ class View():
     def display(self):
 
         if self.m.game_running:
+            self.screen.fill((0, 0, 0))
             self.print_game_in_progress()
                  #start screen
         elif self.m.mode == 0:
@@ -117,7 +118,7 @@ class View():
                 self.print_game_stats(time_up)
 
         #once the time is up!
-        if self.m.mode == 3:
+        elif self.m.mode == 3:
             backgroundColor = (0,0,0)
             self.screen.fill(backgroundColor)
             self.print_end_game()
