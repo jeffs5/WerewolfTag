@@ -5,25 +5,32 @@ import time
 import random
 
 handlers = {}  # map client handler to user name
+running_handlers = {}
 players = {}
 players_ready = 0
 game_running = False
 
 #########################################
 
+#sent to the players who are in the game
 def distribute_msg(msg):
+    for handler in running_handlers:
+        handler.do_send(msg)
+
+#sent to everyone
+def msg_everyone(msg):
     for handler in handlers:
         handler.do_send(msg)
 
 def create_players():
-    for player in handlers:
+    for player in running_handlers:
         x_axis = random.randint(0, 624)
         y_axis = random.randint(0, 424)
         while colliding(x_axis, y_axis):
             x_axis = random.randint(0, 624)
             y_axis = random.randint(0, 424)
             # print "colliding: " + str(x_axis) + ", " + str(y_axis)
-        player_number = handlers[player] 
+        player_number = running_handlers[player] 
         players[player_number] = [x_axis, y_axis, "human"]
 
 # randomly selects a player to be it at the start of the game
@@ -60,29 +67,30 @@ class MyHandler(Handler):
         players_ready = 0
     
     def on_msg(self, msg):
-        global players_ready, players, handlers, game_running
+        global players_ready, players, handlers, game_running, running_handlers
 
         if 'move' in msg:
             distribute_msg(msg)
         elif 'load' in msg:
+            game_running = True
+            for handler in handlers:
+                running_handlers[handler] = handlers[handler]
             distribute_msg(msg)
         elif 'ready' in msg:
             #once all clients have finished counting down/are ready, 
             #the players will be "created" and sent out
             players_ready += 1
-            if players_ready == len(handlers):
+            if players_ready == len(running_handlers):
                 create_players()
                 choose_wolf()
-                game_running = True
                 distribute_msg({"start_state": players})
         elif 'restart' in msg:
            game_running = False
-           distribute_msg({"restart": 'restart'})
+           msg_everyone({"restart": 'restart'})
            handlers = {}  # map client handler to user name
+           running_handlers = {}
            players = {}
            players_ready = 0
-        else:
-            print msg
 
 #########################################
 

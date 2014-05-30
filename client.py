@@ -252,9 +252,9 @@ class Controller():
             elif self.m.mode == 3:
                 if key[pygame.K_SPACE]:
                    self.running = False
-                   n.do_send({'restart': 'restart', 'restart': 'restart'})
+                   return "restart"
 
-            return "no message"
+        return "no message"
 
 
 ##################  NETWORK CONTROLLER ###############
@@ -312,7 +312,7 @@ class NetworkController(Handler):
 
 #################  MAIN LOOP  ####################
 
-host, port = '169.234.6.50', 8888
+host, port = 'localhost', 8888
 
 m = Model()
 v = View(m)
