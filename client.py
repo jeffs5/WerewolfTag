@@ -20,7 +20,6 @@ class Model():
         self.GAME_LENGTH = 30
         self.mode = 0
         self.loading = False
-        self.ready = False
         self.running = True
         self.FRAMERATE = 60
         self.clock = pygame.time.Clock()
@@ -81,10 +80,7 @@ class View():
         elif self.m.mode == 2:
             ## change for time
             time_up = self.m.now + self.m.GAME_LENGTH
-            if time.time() >= time_up:
-                self.m.mode = 3
-
-            else:
+            if time.time() < time_up:
                 # take out?
                 # clock.tick(self.m.FRAMERATE)
 
@@ -193,10 +189,9 @@ class Controller():
         #countdown screen       
         elif self.m.mode == 1:
 
-            self.m.time_up = self.m.now + 5
 
-            if not self.m.ready:
-                self.m.ready = True
+            time_up = self.m.now + 5
+            if time.time() >= time_up:
                 return "ready"
 
         #actual game
@@ -289,12 +284,12 @@ class NetworkController(Handler):
 
     def poll_messages(self):
         poll()
-        sleep(.05)
+        sleep(.01)
 
 
 #################  MAIN LOOP  ####################
 
-host, port = 'localhost', 8888
+host, port = '169.234.6.50', 8888
 
 m = Model()
 v = View(m)
