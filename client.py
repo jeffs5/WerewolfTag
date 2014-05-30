@@ -273,6 +273,7 @@ class NetworkController(Handler):
         if 'join' in msg:
             self.m.player_number = msg['join']
             self.m.game_running = msg['game_running']
+            print self.m.game_running
 
         elif 'load' in msg:
             self.m.loading = False

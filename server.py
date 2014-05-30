@@ -60,7 +60,7 @@ class MyHandler(Handler):
         players_ready = 0
     
     def on_msg(self, msg):
-        global players_ready, players, game_running
+        global players_ready, players, handlers, game_running
 
         if 'move' in msg:
             distribute_msg(msg)
