@@ -17,7 +17,7 @@ class Model():
         self.players = []
         self.borders = [pygame.Rect(0,0, 640, 1), pygame.Rect(0,0, 1, 440), pygame.Rect(639,0, 1, 440), pygame.Rect(0,439, 640, 1)]
         self.player_number = 0
-        self.GAME_LENGTH = 30
+        self.GAME_LENGTH = 5
         self.mode = 0
         self.loading = False
         self.running = True
@@ -184,11 +184,11 @@ class Controller():
 
          #start screen
         if self.m.mode == 0:
-
             if key[pygame.K_SPACE]:
                 if not self.m.loading:
                     self.m.loading = True
                     return "load"
+               
 
         #countdown screen       
         elif self.m.mode == 1:
@@ -237,10 +237,11 @@ class Controller():
 
         #once the time is up!
         elif self.m.mode == 3:
-
             if key[pygame.K_SPACE]:
-                self.m.mode = 0
-                self.m.loading = False
+               python = sys.executable
+               os.execl(python, python, * sys.argv)
+               sys.exit()
+            
 
 
         return "no message"

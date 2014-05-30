@@ -73,6 +73,10 @@ class MyHandler(Handler):
                 create_players()
                 choose_wolf()
                 distribute_msg({"start_state": players})
+        elif 'restart' in msg:
+           print "hit"
+           python = sys.executable
+           os.execl(python, python, * sys.argv)
         else:
             print msg
 
