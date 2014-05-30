@@ -48,7 +48,7 @@ class MyHandler(Handler):
     # def send_all(message):
     #     for i in 
     def on_open(self):
-        global handlers
+        global handlers, game_running
         player_number = len(handlers)
         handlers[self] = player_number
         self.do_send({'join': player_number, 'game_running': game_running})
@@ -60,7 +60,7 @@ class MyHandler(Handler):
         players_ready = 0
     
     def on_msg(self, msg):
-        global players_ready, players
+        global players_ready, players, game_running
 
         if 'move' in msg:
             distribute_msg(msg)
@@ -74,7 +74,7 @@ class MyHandler(Handler):
                 create_players()
                 choose_wolf()
                 game_running = True
-                distribute_msg({"start_state": players, 'game_running': game_running})
+                distribute_msg({"start_state": players})
         elif 'restart' in msg:
            game_running = False
            distribute_msg({"restart": 'restart'})

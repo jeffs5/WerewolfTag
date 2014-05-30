@@ -64,66 +64,75 @@ class View():
 
     def display(self):
 
+        if self.m.game_running:
+            self.print_game_in_progress()
                  #start screen
-        if self.m.mode == 0:
+        elif self.m.mode == 0:
             self.screen.fill((0, 0, 0))
             self.print_title()
 
-        if not game_running:
-            #countdown screen       
-            elif self.m.mode == 1:
-                # clear screen
+        #countdown screen       
+        elif self.m.mode == 1:
+            # clear screen
+            self.screen.fill((0, 0, 0))
+
+            time_up = self.m.now + 5
+            if time.time() < time_up:
+                instructions = self.myfont.render("Get Ready to start!", 1, (255,255,255))
+                countdown = self.myfont.render("{0}".format(int(time_up-time.time()) + 1) , 1, (255,255,255))
+                self.screen.blit(instructions, (210, 210))
+                self.screen.blit(countdown, (300, 230))
+
+        #actual game
+        elif self.m.mode == 2:
+            ## change for time
+            time_up = self.m.now + self.m.GAME_LENGTH
+            if time.time() < time_up:
+                # take out?
+                # clock.tick(self.m.FRAMERATE)
+
+
+                # Draw the scene
                 self.screen.fill((0, 0, 0))
 
-                time_up = self.m.now + 5
-                if time.time() < time_up:
-                    instructions = self.myfont.render("Get Ready to start!", 1, (255,255,255))
-                    countdown = self.myfont.render("{0}".format(int(time_up-time.time()) + 1) , 1, (255,255,255))
-                    self.screen.blit(instructions, (210, 210))
-                    self.screen.blit(countdown, (300, 230))
 
-            #actual game
-            elif self.m.mode == 2:
-                ## change for time
-                time_up = self.m.now + self.m.GAME_LENGTH
-                if time.time() < time_up:
-                    # take out?
-                    # clock.tick(self.m.FRAMERATE)
+                #check to see if any player is still transforming
+                for player in self.m.players:
+                    for attribute in player.attributes:
+                        if attribute == "transforming":
+                            if time.time() >= player.transform_complete:
+                                player.finish_transform()
 
+                            #randomly tested modulo numbers were used for the animation
+                            elif player.transform_counter % 18 == 1:
+                                player.color = (255, 255, 255)
+                            elif player.transform_counter % 6 == 1:
+                                player.color = (255, 0, 0)
 
-                    # Draw the scene
-                    self.screen.fill((0, 0, 0))
+                            #counter used to determine which transformation animation should be shown
+                            player.transform_counter += 1
 
+                    player.draw_player(self.screen)
+                display_number = self.m.player_number + 1
+                self.print_game_stats(time_up)
 
-                    #check to see if any player is still transforming
-                    for player in self.m.players:
-                        for attribute in player.attributes:
-                            if attribute == "transforming":
-                                if time.time() >= player.transform_complete:
-                                    player.finish_transform()
+        #once the time is up!
+        if self.m.mode == 3:
+            backgroundColor = (0,0,0)
+            self.screen.fill(backgroundColor)
+            self.print_end_game()
 
-                                #randomly tested modulo numbers were used for the animation
-                                elif player.transform_counter % 18 == 1:
-                                    player.color = (255, 255, 255)
-                                elif player.transform_counter % 6 == 1:
-                                    player.color = (255, 0, 0)
-
-                                #counter used to determine which transformation animation should be shown
-                                player.transform_counter += 1
-
-                        player.draw_player(self.screen)
-                    display_number = self.m.player_number + 1
-                    self.print_game_stats(time_up)
-
-            #once the time is up!
-            if self.m.mode == 3:
-                backgroundColor = (0,0,0)
-                self.screen.fill(backgroundColor)
-                self.print_end_game()
-
-            pygame.display.flip()
+        pygame.display.flip()
 
     ########## Print Screens ###################
+
+    def print_game_in_progress(self):
+        title = self.myfont.render("Werewolf Tag", 1, (255,255,255))
+        intro_message = self.myfont.render("A game is currently in progress.", 1, (255,255,255))
+        instructions = self.myfont.render("Please wait for the current game to end", 1, (255,255,255))
+        self.screen.blit(title, (240, 10))
+        self.screen.blit(intro_message, (210, 190))
+        self.screen.blit(instructions, (160, 210))
 
     def print_title(self):
         title = self.myfont.render("Werewolf Tag", 1, (255,255,255))
@@ -184,7 +193,7 @@ class Controller():
             if e.type == pygame.KEYDOWN and e.key == pygame.K_ESCAPE:
                 self.m.running = False
 
-        if not game_running:
+        if not self.m.game_running:
              #start screen
             if self.m.mode == 0:
                 if key[pygame.K_SPACE]:
@@ -274,7 +283,6 @@ class NetworkController(Handler):
             self.m.init_game(msg['start_state'])
             self.m.mode = 2
             self.m.now = time.time()
-            self.m.game_running =  msg['game_running']
 
         elif 'move' in msg:
             moved_player = msg['player']
