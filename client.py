@@ -237,11 +237,12 @@ class Controller():
 
         #once the time is up!
         elif self.m.mode == 3:
-            self.running = False
-            n.do_send({'restart': 'restart', 'restart': 'restart'})
-            python = sys.executable
-            os.execl(python, python, * sys.argv)
-            sys.exit()
+            if key[pygame.K_SPACE]:
+               self.running = False
+               n.do_send({'restart': 'restart', 'restart': 'restart'})
+               python = sys.executable
+               os.execl(python, python, * sys.argv)
+               sys.exit()
             
 
 
