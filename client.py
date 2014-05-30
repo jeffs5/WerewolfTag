@@ -27,6 +27,10 @@ class Model():
 
     def init_game(self, player_msg):
 
+        self.players = []
+        self.loading = False
+        self.running = True
+
         for player in player_msg.items():
             # player[0] is player_number
             # player[1] is instruction
@@ -236,6 +240,8 @@ class Controller():
 
             if key[pygame.K_SPACE]:
                 self.m.mode = 0
+                self.m.loading = False
+
 
         return "no message"
 
