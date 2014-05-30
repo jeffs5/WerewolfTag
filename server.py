@@ -74,9 +74,10 @@ class MyHandler(Handler):
                 choose_wolf()
                 distribute_msg({"start_state": players})
         elif 'restart' in msg:
-           print "hit"
-           python = sys.executable
-           os.execl(python, python, * sys.argv)
+           distribute_msg({"restart": 'restart'})
+           handlers = {}  # map client handler to user name
+           players = {}
+           players_ready = 0
         else:
             print msg
 

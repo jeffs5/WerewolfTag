@@ -240,11 +240,6 @@ class Controller():
             if key[pygame.K_SPACE]:
                self.running = False
                n.do_send({'restart': 'restart', 'restart': 'restart'})
-               python = sys.executable
-               os.execl(python, python, * sys.argv)
-               sys.exit()
-            
-
 
         return "no message"
 
@@ -282,6 +277,10 @@ class NetworkController(Handler):
             self.move_player(player, msg['move'])
 
             #used for error handling
+        elif 'restart' in msg:
+            python = sys.executable
+            os.execl(python, python, * sys.argv)
+            sys.exit()
         else:
             print msg
 
