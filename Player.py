@@ -41,20 +41,10 @@ class Player(object):
             if dx != 0:
                 self.move_single_axis(dx * self.speed, 0, borders,
                         players)
-                # self.powerUp_single_axis(dx * self.speed, 0, powerUp,
-                #         players)
+
             if dy != 0:
                 self.move_single_axis(0, dy * self.speed, borders,
                         players)
-                # self.powerUp_single_axis(dy * self.speed, 0, powerUp,
-                #         players)
-        # else:
-        #     if dx != 0:
-        #         self.powerUp_single_axis(dx * self.speed, 0, borders,
-        #                 players)
-        #     if dy != 0:
-        #         self.powerUp_single_axis(0, dy * self.speed, borders,
-        #                 players)
 
         return players
 
