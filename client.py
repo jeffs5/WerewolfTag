@@ -79,10 +79,7 @@ class View():
 
             time_up = self.m.now + 5
             if time.time() < time_up:
-                instructions = self.myfont.render("Get Ready to start!", 1, (255,255,255))
-                countdown = self.myfont.render("{0}".format(int(time_up-time.time()) + 1) , 1, (255,255,255))
-                self.screen.blit(instructions, (210, 210))
-                self.screen.blit(countdown, (300, 230))
+                self.print_countdown(time_up)
 
         #actual game
         elif self.m.mode == 2:
@@ -99,19 +96,18 @@ class View():
 
                 #check to see if any player is still transforming
                 for player in self.m.players:
-                    for attribute in player.attributes:
-                        if attribute == "transforming":
-                            if time.time() >= player.transform_complete:
-                                player.finish_transform()
+                    if player.transforming:
+                        if time.time() >= player.transform_complete:
+                            player.finish_transform()
 
-                            #randomly tested modulo numbers were used for the animation
-                            elif player.transform_counter % 18 == 1:
-                                player.color = (255, 255, 255)
-                            elif player.transform_counter % 6 == 1:
-                                player.color = (255, 0, 0)
+                        #randomly tested modulo numbers were used for the animation
+                        elif player.transform_counter % 18 == 1:
+                            player.color = (255, 255, 255)
+                        elif player.transform_counter % 6 == 1:
+                            player.color = (255, 0, 0)
 
-                            #counter used to determine which transformation animation should be shown
-                            player.transform_counter += 1
+                        #counter used to determine which transformation animation should be shown
+                        player.transform_counter += 1
 
                     player.draw_player(self.screen)
                 display_number = self.m.player_number + 1
@@ -143,12 +139,18 @@ class View():
         self.screen.blit(intro_message, (210, 190))
         self.screen.blit(instructions, (160, 210))
 
+    def print_countdown(self, time_up):
+        instructions = self.myfont.render("Get Ready to start!", 1, (255,255,255))
+        countdown = self.myfont.render("{0}".format(int(time_up-time.time()) + 1) , 1, (255,255,255))
+        self.screen.blit(instructions, (210, 210))
+        self.screen.blit(countdown, (300, 230))
+
     def print_game_stats(self, time_up):
         display_number = self.m.player_number + 1
 
         player_score = self.myfont.render(
             "Player: {0}, score: {1}".format(display_number, self.m.players[self.m.player_number].get_score()), 1, (255,255,255))
-        time_left = self.myfont.render("Time left: {0}".format(time_up-time.time() + 1), 1, (255,255,255))
+        time_left = self.myfont.render("Time left: {0}".format(int(time_up-time.time()) + 1), 1, (255,255,255))
         self.screen.blit(player_score, (16, 400))
         self.screen.blit(time_left, (220, 10))
 
@@ -228,22 +230,16 @@ class Controller():
                             instruction = self.controls.get(pressed)
                             moving_player = self.m.players[self.m.player_number]
 
-                            #if the player has an attribute check if they can still move
-                            if len(moving_player.attributes) > 0:
-                                for attribute in moving_player.attributes:
-                                    if attribute != "transforming":
-                                        ##problem since it returns on the first one
-                                       n.do_send({'move': instruction, 'player': self.m.player_number})
-                            else:
-                                n.do_send({'move': instruction, 'player': self.m.player_number})
+                            if not moving_player.transforming:
+                               n.do_send({'move': instruction, 'player': self.m.player_number})
 
                     #check to see if any player is still transforming
                     for player in self.m.players:
-                        player.increase_score(1)
-                        for attribute in player.attributes:
-                            if attribute == "transforming":
-                                if time.time() >= player.transform_complete:
-                                    player.finish_transform()
+                        if not player.is_it and not player.transforming:
+                            player.increase_score(1)
+                        if player.transforming:
+                            if time.time() >= player.transform_complete:
+                                player.finish_transform()
 
                                 #counter used to determine which transformation animation should be shown
                                 player.transform_counter += 1
@@ -274,7 +270,6 @@ class NetworkController(Handler):
         if 'join' in msg:
             self.m.player_number = msg['join']
             self.m.game_running = msg['game_running']
-            print self.m.game_running
 
         elif 'load' in msg:
             self.m.loading = False
