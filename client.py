@@ -9,7 +9,7 @@ import Player
 import time
 from Model  import Model
 
-
+host, port = 'localhost', 8887
 
 ##################  VIEW #############################
 
@@ -225,7 +225,6 @@ class Controller():
                 if not self.m.score_sent:
                     self.m.score_sent = True
                     n.do_send({'player_number': self.m.player_number, 'score': self.m.players[str(self.m.player_number)].get_score()})
-                    print self.m.players[str(self.m.player_number)].get_score()
 
                 if key[pygame.K_SPACE]:
                    self.running = False
@@ -286,12 +285,12 @@ class NetworkController(Handler):
 
     def poll_messages(self):
         poll()
-        sleep(.01)
+        sleep(.045)
 
 
 #################  MAIN LOOP  ####################
 
-host, port = 'localhost', 8888
+
 
 m = Model()
 v = View(m)

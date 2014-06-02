@@ -89,7 +89,7 @@ class MyHandler(Handler):
         if self in handlers:
             # print "deleted from handler list"
             del(handlers[self])
-        if self in handlers:
+        if self in running_handlers:
             del(running_handlers[self])
         players = {}
         players_ready = 0
@@ -117,8 +117,8 @@ class MyHandler(Handler):
         elif 'score' in msg:
             scores_received += 1
             player_scores[msg['player_number']] = msg['score']
+            
             if scores_received == len(running_handlers):
-                print player_scores
                 scores_received = 0
                 winner = determine_winner(player_scores)
                 player_scores = {}
@@ -140,7 +140,7 @@ class Serv(Listener):
     handlerClass = MyHandler
 
 
-port = 8888
+port = 8887
 server = Serv(port)
 while 1:
     try:

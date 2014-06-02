@@ -16,8 +16,8 @@ class Model():
         self.now = time.time()
         self.game_running = False
         self.score_sent = False
-        self.winner_number = 0
-        self.winner_score = 0
+        self.winner_number = 99
+        self.winner_score = -99
 
     def init_game(self, player_msg):
 
