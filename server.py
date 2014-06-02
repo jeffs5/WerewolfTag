@@ -61,10 +61,12 @@ class MyHandler(Handler):
         self.do_send({'join': player_number, 'game_running': game_running})
         
     def on_close(self):
-        global players_ready, players, handlers
+        global players_ready, players, handlers, game_running
         del(handlers[self])
         players = {}
         players_ready = 0
+        if len(handlers) <= 0:
+            game_running = False
     
     def on_msg(self, msg):
         global players_ready, players, handlers, game_running, running_handlers

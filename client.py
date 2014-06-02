@@ -17,7 +17,7 @@ class Model():
         self.players = []
         self.borders = [pygame.Rect(0,0, 640, 1), pygame.Rect(0,0, 1, 440), pygame.Rect(639,0, 1, 440), pygame.Rect(0,439, 640, 1)]
         self.player_number = 0
-        self.GAME_LENGTH = 5
+        self.GAME_LENGTH = 10
         self.mode = 0
         self.loading = False
         self.running = True
@@ -128,16 +128,18 @@ class View():
         intro_message = self.myfont.render("A game is currently in progress.", 1, (255,255,255))
         instructions = self.myfont.render("Please wait for the current game to end", 1, (255,255,255))
         self.screen.blit(title, (240, 10))
-        self.screen.blit(intro_message, (210, 190))
-        self.screen.blit(instructions, (160, 210))
+        self.screen.blit(intro_message, (180, 190))
+        self.screen.blit(instructions, (140, 210))
 
     def print_title(self):
         title = self.myfont.render("Werewolf Tag", 1, (255,255,255))
         intro_message = self.myfont.render("You are player {0}".format(self.m.player_number + 1), 1, (255,255,255))
-        instructions = self.myfont.render("Press SPACE to Start Countdown", 1, (255,255,255))
-        self.screen.blit(title, (240, 10))
-        self.screen.blit(intro_message, (210, 190))
-        self.screen.blit(instructions, (160, 210))
+        instructions1 = self.myfont.render("When Everyone is Ready...", 1, (255,255,255))
+        instructions2 = self.myfont.render("Press SPACE to Start Countdown", 1, (255,255,255))
+        self.screen.blit(title, (250, 10))
+        self.screen.blit(intro_message, (230, 190))
+        self.screen.blit(instructions1, (210, 230))
+        self.screen.blit(instructions2, (180, 245))
 
     def print_countdown(self, time_up):
         instructions = self.myfont.render("Get Ready to start!", 1, (255,255,255))
@@ -147,26 +149,37 @@ class View():
 
     def print_game_stats(self, time_up):
         display_number = self.m.player_number + 1
+        player = self.m.players[self.m.player_number]
+        x = player.rect.x
+        y = player.rect.y
 
         player_score = self.myfont.render(
-            "Player: {0}, score: {1}".format(display_number, self.m.players[self.m.player_number].get_score()), 1, (255,255,255))
+            "Your score: {0}".format(self.m.players[self.m.player_number].get_score()), 1, (255,255,255))
         time_left = self.myfont.render("Time left: {0}".format(int(time_up-time.time()) + 1), 1, (255,255,255))
+        pointer = self.myfont.render("You", 1, (255,255,255))
         self.screen.blit(player_score, (16, 400))
-        self.screen.blit(time_left, (220, 10))
+        self.screen.blit(time_left, (250, 10))
+        self.screen.blit(pointer, (x - 5, y - 23))
 
     def print_end_game(self):
         time_up = self.myfont.render("Time's Up!", 1, (255,255,255))
         winner = self.select_winner(self.m.players)
-        winner_number = winner.get_player_number() + 1
-        winner_text = self.myfont.render(
-            "The winner is: Player {0} with a score of {1}".format(winner_number, winner.get_score()), 1, (255,255,255))
+        winner_number = winner.get_player_number()
+
+        if self.m.player_number != winner_number:
+            winner_text = self.myfont.render(
+                "The winner is: Player {0} with a score of {1}".format((winner_number + 1), winner.get_score()), 1, (255,255,255))
+            self.screen.blit(winner_text, (110, 210))
+        else:
+            winner_text = self.myfont.render("You won!", 1, (255,255,255))
+            self.screen.blit(winner_text, (250, 210))
+
         your_text = self.myfont.render("Your score was: {0} ".format(self.m.players[self.m.player_number].get_score()), 1, (255,255,255))
         restart_text = self.myfont.render("Press Space to continue", 1, (255,255,255))
 
-        self.screen.blit(time_up, (240, 10))
-        self.screen.blit(winner_text, (110, 210))
+        self.screen.blit(time_up, (250, 10))
         self.screen.blit(your_text, (200, 225))
-        self.screen.blit(restart_text, (180, 235))
+        self.screen.blit(restart_text, (180, 270))
 
     def select_winner(self, players):
         winner = self.m.players[0]
