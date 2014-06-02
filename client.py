@@ -10,6 +10,7 @@ import time
 from Model  import Model
 
 
+
 ##################  VIEW #############################
 
 class View():
@@ -42,10 +43,7 @@ class View():
 
             time_up = self.m.now + 5
             if time.time() < time_up:
-                instructions = self.myfont.render("Get Ready to start!", 1, (255,255,255))
-                countdown = self.myfont.render("{0}".format(int(time_up-time.time()) + 1) , 1, (255,255,255))
-                self.screen.blit(instructions, (210, 210))
-                self.screen.blit(countdown, (300, 230))
+                self.print_countdown(time_up)
 
         #actual game
         elif self.m.mode == 2:
@@ -61,20 +59,19 @@ class View():
 
 
                 #check to see if any player is still transforming
-                for player in self.m.players:
-                    for attribute in player.attributes:
-                        if attribute == "transforming":
-                            if time.time() >= player.transform_complete:
-                                player.finish_transform()
+                for player in self.m.players.values():
+                    if player.transforming:
+                        if time.time() >= player.transform_complete:
+                            player.finish_transform()
 
-                            #randomly tested modulo numbers were used for the animation
-                            elif player.transform_counter % 18 == 1:
-                                player.color = (255, 255, 255)
-                            elif player.transform_counter % 6 == 1:
-                                player.color = (255, 0, 0)
+                        #randomly tested modulo numbers were used for the animation
+                        elif player.transform_counter % 18 == 1:
+                            player.color = (255, 255, 255)
+                        elif player.transform_counter % 6 == 1:
+                            player.color = (255, 0, 0)
 
-                            #counter used to determine which transformation animation should be shown
-                            player.transform_counter += 1
+                        #counter used to determine which transformation animation should be shown
+                        player.transform_counter += 1
 
                     player.draw_player(self.screen)
                 display_number = self.m.player_number + 1
@@ -95,43 +92,62 @@ class View():
         intro_message = self.myfont.render("A game is currently in progress.", 1, (255,255,255))
         instructions = self.myfont.render("Please wait for the current game to end", 1, (255,255,255))
         self.screen.blit(title, (240, 10))
-        self.screen.blit(intro_message, (210, 190))
-        self.screen.blit(instructions, (160, 210))
+        self.screen.blit(intro_message, (180, 190))
+        self.screen.blit(instructions, (140, 210))
 
     def print_title(self):
         title = self.myfont.render("Werewolf Tag", 1, (255,255,255))
         intro_message = self.myfont.render("You are player {0}".format(self.m.player_number + 1), 1, (255,255,255))
-        instructions = self.myfont.render("Press SPACE to Start Countdown", 1, (255,255,255))
-        self.screen.blit(title, (240, 10))
-        self.screen.blit(intro_message, (210, 190))
-        self.screen.blit(instructions, (160, 210))
+        instructions1 = self.myfont.render("When Everyone is Ready...", 1, (255,255,255))
+        instructions2 = self.myfont.render("Press SPACE to Start Countdown", 1, (255,255,255))
+        self.screen.blit(title, (250, 10))
+        self.screen.blit(intro_message, (230, 190))
+        self.screen.blit(instructions1, (210, 230))
+        self.screen.blit(instructions2, (180, 245))
+
+    def print_countdown(self, time_up):
+        instructions = self.myfont.render("Get Ready to start!", 1, (255,255,255))
+        countdown = self.myfont.render("{0}".format(int(time_up-time.time()) + 1) , 1, (255,255,255))
+        self.screen.blit(instructions, (210, 210))
+        self.screen.blit(countdown, (300, 230))
 
     def print_game_stats(self, time_up):
         display_number = self.m.player_number + 1
+        player = self.m.players[str(self.m.player_number)]
+        x = player.rect.x
+        y = player.rect.y
 
         player_score = self.myfont.render(
-            "Player: {0}, score: {1}".format(display_number, self.m.players[self.m.player_number].get_score()), 1, (255,255,255))
-        time_left = self.myfont.render("Time left: {0}".format(time_up-time.time()), 1, (255,255,255))
+            "Your score: {0}".format(self.m.players[str(self.m.player_number)].get_score()), 1, (255,255,255))
+        time_left = self.myfont.render("Time left: {0}".format(int(time_up-time.time())), 1, (255,255,255))
+        pointer = self.myfont.render("You", 1, (255,255,255))
         self.screen.blit(player_score, (16, 400))
-        self.screen.blit(time_left, (220, 10))
+        self.screen.blit(time_left, (250, 10))
+        self.screen.blit(pointer, (x - 6, y - 23))
 
     def print_end_game(self):
         time_up = self.myfont.render("Time's Up!", 1, (255,255,255))
         winner = self.select_winner(self.m.players)
-        winner_number = winner.get_player_number() + 1
-        winner_text = self.myfont.render(
-            "The winner is: Player {0} with a score of {1}".format(winner_number, winner.get_score()), 1, (255,255,255))
-        your_text = self.myfont.render("Your score was: {0} ".format(self.m.players[self.m.player_number].get_score()), 1, (255,255,255))
+        winner_number = winner.get_player_number()
+
+        if self.m.player_number != winner_number:
+            winner_text = self.myfont.render(
+                "The winner is: Player {0} with a score of {1}".format((winner_number + 1), winner.get_score()), 1, (255,255,255))
+            self.screen.blit(winner_text, (110, 210))
+        else:
+            winner_text = self.myfont.render("You won!", 1, (255,255,255))
+            self.screen.blit(winner_text, (250, 210))
+
+        your_text = self.myfont.render("Your score was: {0} ".format(self.m.players[str(self.m.player_number)].get_score()), 1, (255,255,255))
         restart_text = self.myfont.render("Press Space to continue", 1, (255,255,255))
 
-        self.screen.blit(time_up, (240, 10))
-        self.screen.blit(winner_text, (110, 210))
+        self.screen.blit(time_up, (250, 10))
         self.screen.blit(your_text, (200, 225))
-        self.screen.blit(restart_text, (180, 235))
+        self.screen.blit(restart_text, (180, 270))
 
     def select_winner(self, players):
-        winner = self.m.players[0]
-        for player in self.m.players:
+        winner = self.m.players.values()[0]
+        for player in self.m.players.values():
             if player.get_score() > winner.get_score():
                 winner = player
 
@@ -189,24 +205,18 @@ class Controller():
                     for pressed in self.controls:
                         if key[pressed]:
                             instruction = self.controls.get(pressed)
-                            moving_player = self.m.players[self.m.player_number]
+                            moving_player = self.m.players[str(self.m.player_number)]
 
-                            #if the player has an attribute check if they can still move
-                            if len(moving_player.attributes) > 0:
-                                for attribute in moving_player.attributes:
-                                    if attribute != "transforming":
-                                        ##problem since it returns on the first one
-                                       n.do_send({'move': instruction, 'player': self.m.player_number})
-                            else:
-                                n.do_send({'move': instruction, 'player': self.m.player_number})
+                            if not moving_player.transforming:
+                               n.do_send({'move': instruction, 'player': self.m.player_number})
 
                     #check to see if any player is still transforming
-                    for player in self.m.players:
-                        player.increase_score(1)
-                        for attribute in player.attributes:
-                            if attribute == "transforming":
-                                if time.time() >= player.transform_complete:
-                                    player.finish_transform()
+                    for player in self.m.players.values():
+                        if not player.is_it and not player.transforming:
+                            player.increase_score(1)
+                        if player.transforming:
+                            if time.time() >= player.transform_complete:
+                                player.finish_transform()
 
                                 #counter used to determine which transformation animation should be shown
                                 player.transform_counter += 1
@@ -241,7 +251,6 @@ class NetworkController(Handler):
         if 'join' in msg:
             self.m.player_number = msg['join']
             self.m.game_running = msg['game_running']
-            print self.m.game_running
 
         elif 'load' in msg:
             self.m.loading = False
@@ -255,7 +264,7 @@ class NetworkController(Handler):
 
         elif 'move' in msg:
             moved_player = msg['player']
-            player = self.m.players[moved_player]
+            player = self.m.players[str(moved_player)]
             self.move_player(player, msg['move'])
 
             #used for error handling
@@ -267,7 +276,7 @@ class NetworkController(Handler):
             print msg
 
     def move_player(self, player, instruction):
-        player.move(instruction[0], instruction[1], self.m.borders, self.m.players)
+        player.move(instruction[0], instruction[1], self.m.borders, self.m.players.values())
 
     def send_message(self, message):
         self.do_send(message)
