@@ -9,7 +9,7 @@ import Player
 import time
 from Model  import Model
 
-host, port = 'localhost', 8887
+host, port = '169.234.72.220', 8887
 
 ##################  VIEW #############################
 
