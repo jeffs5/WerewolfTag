@@ -73,6 +73,7 @@ class MyHandler(Handler):
         global players_ready, players, handlers, game_running
         if self in handlers:
             del(handlers[self])
+            del(running_handlers[self])
         players = {}
         players_ready = 0
         if len(handlers) <= 0:
@@ -97,7 +98,6 @@ class MyHandler(Handler):
                 choose_wolf()
                 distribute_msg({"start_state": players})
         elif 'score' in msg:
-            scores_received
             player_scores[msg['player_number']] = msg['score']
 
         elif 'restart' in msg:

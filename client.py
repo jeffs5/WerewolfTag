@@ -59,7 +59,7 @@ class View():
 
 
                 #check to see if any player is still transforming
-                for player in self.m.players.values():
+                for player in self.m.players:
                     if player.transforming:
                         if time.time() >= player.transform_complete:
                             player.finish_transform()
@@ -113,12 +113,12 @@ class View():
 
     def print_game_stats(self, time_up):
         display_number = self.m.player_number + 1
-        player = self.m.players[str(self.m.player_number)]
+        player = self.m.players[self.m.player_number]
         x = player.rect.x
         y = player.rect.y
 
         player_score = self.myfont.render(
-            "Your score: {0}".format(self.m.players[str(self.m.player_number)].get_score()), 1, (255,255,255))
+            "Your score: {0}".format(self.m.players[self.m.player_number].get_score()), 1, (255,255,255))
         time_left = self.myfont.render("Time left: {0}".format(int(time_up-time.time())), 1, (255,255,255))
         pointer = self.myfont.render("You", 1, (255,255,255))
         self.screen.blit(player_score, (16, 400))
@@ -138,7 +138,7 @@ class View():
             winner_text = self.myfont.render("You won!", 1, (255,255,255))
             self.screen.blit(winner_text, (250, 210))
 
-        your_text = self.myfont.render("Your score was: {0} ".format(self.m.players[str(self.m.player_number)].get_score()), 1, (255,255,255))
+        your_text = self.myfont.render("Your score was: {0} ".format(self.m.players[self.m.player_number].get_score()), 1, (255,255,255))
         restart_text = self.myfont.render("Press Space to continue", 1, (255,255,255))
 
         self.screen.blit(time_up, (250, 10))
@@ -146,8 +146,8 @@ class View():
         self.screen.blit(restart_text, (180, 270))
 
     def select_winner(self, players):
-        winner = self.m.players.values()[0]
-        for player in self.m.players.values():
+        winner = self.m.players[0]
+        for player in self.m.players:
             if player.get_score() > winner.get_score():
                 winner = player
 
@@ -205,13 +205,13 @@ class Controller():
                     for pressed in self.controls:
                         if key[pressed]:
                             instruction = self.controls.get(pressed)
-                            moving_player = self.m.players[str(self.m.player_number)]
+                            moving_player = self.m.players[self.m.player_number]
 
                             if not moving_player.transforming:
                                n.do_send({'move': instruction, 'player': self.m.player_number})
 
                     #check to see if any player is still transforming
-                    for player in self.m.players.values():
+                    for player in self.m.players:
                         if not player.is_it and not player.transforming:
                             player.increase_score(1)
                         if player.transforming:
@@ -264,7 +264,7 @@ class NetworkController(Handler):
 
         elif 'move' in msg:
             moved_player = msg['player']
-            player = self.m.players[str(moved_player)]
+            player = self.m.players[moved_player]
             self.move_player(player, msg['move'])
 
             #used for error handling
@@ -276,7 +276,7 @@ class NetworkController(Handler):
             print msg
 
     def move_player(self, player, instruction):
-        player.move(instruction[0], instruction[1], self.m.borders, self.m.players.values())
+        player.move(instruction[0], instruction[1], self.m.borders, self.m.players)
 
     def send_message(self, message):
         self.do_send(message)
