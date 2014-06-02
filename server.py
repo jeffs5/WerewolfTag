@@ -72,7 +72,6 @@ class MyHandler(Handler):
     def on_close(self):
         global players_ready, players, handlers, game_running
         if self in handlers:
-            print "deleting"
             del(handlers[self])
         players = {}
         players_ready = 0
