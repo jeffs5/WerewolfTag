@@ -73,6 +73,7 @@ class MyHandler(Handler):
         global players_ready, players, handlers, game_running
         if self in handlers:
             del(handlers[self])
+        if self in handlers:
             del(running_handlers[self])
         players = {}
         players_ready = 0
