@@ -7,44 +7,7 @@ import random
 import pygame
 import Player
 import time
-
-
-##################  MODEL ############################
-
-
-class Model():
-    def __init__(self):
-        self.players = []
-        self.borders = [pygame.Rect(0,0, 640, 1), pygame.Rect(0,0, 1, 440), pygame.Rect(639,0, 1, 440), pygame.Rect(0,439, 640, 1)]
-        self.player_number = 0
-        self.GAME_LENGTH = 5
-        self.mode = 0
-        self.loading = False
-        self.running = True
-        self.FRAMERATE = 60
-        self.clock = pygame.time.Clock()
-        self.now = time.time()
-        self.game_running = False
-
-    def init_game(self, player_msg):
-
-        self.players = []
-        self.loading = False
-        self.running = True
-
-        for player in player_msg.items():
-            # player[0] is player_number
-            # player[1] is instruction
-            # player[2] is player type
-            player_info = player[1]
-            x_axis = player_info[0]
-            y_axis = player_info[1]
-            new_player = Player.Player(x_axis, y_axis, player[0])
-
-            if player_info[2] == 'wolf':
-                new_player.becomes_it()
-
-            self.players.append(new_player)
+from Model  import Model
 
 
 ##################  VIEW #############################
@@ -148,7 +111,7 @@ class View():
 
         player_score = self.myfont.render(
             "Player: {0}, score: {1}".format(display_number, self.m.players[self.m.player_number].get_score()), 1, (255,255,255))
-        time_left = self.myfont.render("Time left: {0}".format(time_up-time.time() + 1), 1, (255,255,255))
+        time_left = self.myfont.render("Time left: {0}".format(time_up-time.time()), 1, (255,255,255))
         self.screen.blit(player_score, (16, 400))
         self.screen.blit(time_left, (220, 10))
 
@@ -250,6 +213,10 @@ class Controller():
 
             #once the time is up!
             elif self.m.mode == 3:
+                if not self.m.score_sent:
+                    self.m.score_sent = True
+                    n.do_send({'player_number': self.m.player_number, 'score': self.m.players[self.m.player_number].get_score()})
+
                 if key[pygame.K_SPACE]:
                    self.running = False
                    return "restart"

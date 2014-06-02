@@ -8,6 +8,7 @@ handlers = {}  # map client handler to user name
 running_handlers = {}
 players = {}
 players_ready = 0
+player_scores = {}
 game_running = False
 
 #########################################
@@ -84,6 +85,10 @@ class MyHandler(Handler):
                 create_players()
                 choose_wolf()
                 distribute_msg({"start_state": players})
+        elif 'score' in msg:
+            scores_received
+            player_scores[msg['player_number']] = msg['score']
+
         elif 'restart' in msg:
            game_running = False
            msg_everyone({"restart": 'restart'})
