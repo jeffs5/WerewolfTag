@@ -285,7 +285,7 @@ class NetworkController(Handler):
 
     def poll_messages(self):
         poll()
-        sleep(.045)
+        sleep(.01)
 
 
 #################  MAIN LOOP  ####################
