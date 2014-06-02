@@ -7,7 +7,7 @@ class Model():
         self.players = {}
         self.borders = [pygame.Rect(0,0, 640, 1), pygame.Rect(0,0, 1, 440), pygame.Rect(639,0, 1, 440), pygame.Rect(0,439, 640, 1)]
         self.player_number = 0
-        self.GAME_LENGTH = 5
+        self.GAME_LENGTH = 20
         self.mode = 0
         self.loading = False
         self.running = True
