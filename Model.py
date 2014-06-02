@@ -4,7 +4,7 @@ from Player import Player
 
 class Model():
     def __init__(self):
-        self.players = []
+        self.players = {}
         self.borders = [pygame.Rect(0,0, 640, 1), pygame.Rect(0,0, 1, 440), pygame.Rect(639,0, 1, 440), pygame.Rect(0,439, 640, 1)]
         self.player_number = 0
         self.GAME_LENGTH = 5
@@ -19,7 +19,7 @@ class Model():
 
     def init_game(self, player_msg):
 
-        self.players = []
+        self.players = {}
         self.loading = False
         self.running = True
 
@@ -35,4 +35,4 @@ class Model():
             if player_info[2] == 'wolf':
                 new_player.becomes_it()
 
-            self.players.append(new_player)
+            self.players[player[0]] = new_player

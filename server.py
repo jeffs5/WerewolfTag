@@ -70,8 +70,9 @@ class MyHandler(Handler):
         self.do_send({'join': player_number, 'game_running': game_running})
         
     def on_close(self):
-        global players_ready, players, handlers, game_running
+        global players_ready, players, handlers, game_running, running_handlers
         if self in handlers:
+            # print "deleted from handler list"
             del(handlers[self])
         if self in handlers:
             del(running_handlers[self])
