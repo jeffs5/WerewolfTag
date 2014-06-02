@@ -60,13 +60,10 @@ def colliding(x1, y1):
 
 def determine_winner(player_scores):
 
-    winner
-
+    #player
     for player in player_scores:
-        if player_scores[player] == winner[0]:
-            winner = (player,player_scores[player])
-
-
+        if player_scores[player] == player_scores[player]:
+            winner = (player, player_scores[player])
 
 
     for player in player_scores:
@@ -120,8 +117,11 @@ class MyHandler(Handler):
         elif 'score' in msg:
             scores_received += 1
             player_scores[msg['player_number']] = msg['score']
-            if scores_received == len(player_scores):
+            if scores_received == len(running_handlers):
+                print player_scores
+                scores_received = 0
                 winner = determine_winner(player_scores)
+                player_scores = {}
                 distribute_msg({'winner_number': winner[0], 'winner_score': winner[1]})
 
         elif 'restart' in msg:
@@ -131,6 +131,8 @@ class MyHandler(Handler):
            running_handlers = {}
            players = {}
            players_ready = 0
+           player_scores = {}
+           scores_received = 0
 
 #########################################
 

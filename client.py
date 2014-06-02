@@ -225,6 +225,7 @@ class Controller():
                 if not self.m.score_sent:
                     self.m.score_sent = True
                     n.do_send({'player_number': self.m.player_number, 'score': self.m.players[str(self.m.player_number)].get_score()})
+                    print self.m.players[str(self.m.player_number)].get_score()
 
                 if key[pygame.K_SPACE]:
                    self.running = False
