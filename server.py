@@ -37,7 +37,15 @@ def create_players():
 # the "it" player number is the random number + 1
 def choose_wolf():
     it_player = random.randint(0, len(players) - 1)
-    players[it_player][2] = 'wolf'
+    player_list = []
+
+    # puts the dictionary in a list so we don't get and index out of range
+    # when a player leaves and their number is selected
+    for player in players:
+        player_list.append(player)
+    it_player_number = player_list[it_player]
+
+    players[it_player_number][2] = 'wolf'
 
 def colliding(x1, y1):
     width = 16
@@ -62,7 +70,9 @@ class MyHandler(Handler):
         
     def on_close(self):
         global players_ready, players, handlers, game_running
-        del(handlers[self])
+        if self in handlers:
+            print "deleting"
+            del(handlers[self])
         players = {}
         players_ready = 0
         if len(handlers) <= 0:
