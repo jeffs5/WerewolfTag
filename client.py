@@ -127,12 +127,10 @@ class View():
 
     def print_end_game(self):
         time_up = self.myfont.render("Time's Up!", 1, (255,255,255))
-        winner = self.select_winner(self.m.players)
-        winner_number = winner.get_player_number()
 
-        if self.m.player_number != winner_number:
+        if self.m.player_number != self.m.winner_number:
             winner_text = self.myfont.render(
-                "The winner is: Player {0} with a score of {1}".format((winner_number + 1), winner.get_score()), 1, (255,255,255))
+                "The winner is: Player {0} with a score of {1}".format((self.m.winner_number + 1), self.m.winner_score), 1, (255,255,255))
             self.screen.blit(winner_text, (110, 210))
         else:
             winner_text = self.myfont.render("You won!", 1, (255,255,255))
@@ -268,7 +266,10 @@ class NetworkController(Handler):
             player = self.m.players[str(moved_player)]
             self.move_player(player, msg['move'])
 
-            #used for error handling
+        elif 'winner_number' in msg:
+            self.m.winner_number = msg['winner_number']
+            self.m.winner_score = msg['winner_score']
+
         elif 'restart' in msg:
             python = sys.executable
             os.execl(python, python, * sys.argv)

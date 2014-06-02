@@ -9,6 +9,7 @@ running_handlers = {}
 players = {}
 players_ready = 0
 player_scores = {}
+scores_received = 0
 game_running = False
 
 #########################################
@@ -57,6 +58,23 @@ def colliding(x1, y1):
         # print str(x1) + ", " + str(y1) + ": " + str(x2) + ", " + str(y2)
         return x1 < x2 + width and y1 < y2 + height and x2 < x1 + width and y2 < y1 + height
 
+def determine_winner(player_scores):
+
+    winner
+
+    for player in player_scores:
+        if player_scores[player] == winner[0]:
+            winner = (player,player_scores[player])
+
+
+
+
+    for player in player_scores:
+        if player_scores[player] >= winner[1]:
+            winner = (player,player_scores[player])
+
+    return winner
+
 ###########################################
 
 class MyHandler(Handler):
@@ -82,7 +100,7 @@ class MyHandler(Handler):
             game_running = False
     
     def on_msg(self, msg):
-        global players_ready, players, handlers, game_running, running_handlers
+        global players_ready, players, handlers, game_running, running_handlers, player_scores, scores_received
 
         if 'move' in msg:
             distribute_msg(msg)
@@ -100,7 +118,11 @@ class MyHandler(Handler):
                 choose_wolf()
                 distribute_msg({"start_state": players})
         elif 'score' in msg:
+            scores_received += 1
             player_scores[msg['player_number']] = msg['score']
+            if scores_received == len(player_scores):
+                winner = determine_winner(player_scores)
+                distribute_msg({'winner_number': winner[0], 'winner_score': winner[1]})
 
         elif 'restart' in msg:
            game_running = False
