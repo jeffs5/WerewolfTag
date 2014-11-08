@@ -149,6 +149,6 @@ class Player(object):
         pygame.draw.rect(screen, self.color, self.rect)
 
     def is_it(self):
-        return is_it
+        return self.is_it
 
 
