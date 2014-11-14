@@ -9,7 +9,7 @@ import Player
 import time
 from Model  import Model
 
-host, port = '169.234.72.220', 8887
+host, port = 'localhost', 8887
 
 ##################  VIEW #############################
 
@@ -24,7 +24,7 @@ class View():
         # Set up the display
         pygame.display.set_caption("Play Tag!")
         self.screen = pygame.display.set_mode((640, 440))
-        self.myfont = pygame.font.SysFont("monospace", 16)
+        self.myfont = pygame.font.Font(None, 16)
 
     def display(self):
 
