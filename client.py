@@ -21,17 +21,21 @@ class View():
         os.environ["SDL_VIDEO_CENTERED"] = "1"
         pygame.init()
 
+        self.play_music(m)
+
         # Set up the display
         pygame.display.set_caption("Play Tag!")
         self.screen = pygame.display.set_mode((640, 440))
-        self.myfont = pygame.font.SysFont("monospace", 16)
+        self.myfont = pygame.font.Font(None, 16)
 
     def display(self):
 
         if self.m.game_running:
             self.screen.fill((0, 0, 0))
             self.print_game_in_progress()
-                 #start screen
+
+
+        #start screen
         elif self.m.mode == 0:
             self.screen.fill((0, 0, 0))
             self.print_title()
@@ -41,17 +45,23 @@ class View():
             # clear screen
             self.screen.fill((0, 0, 0))
 
+
+
             time_up = self.m.now + 5
             if time.time() < time_up:
                 self.print_countdown(time_up)
 
         #actual game
         elif self.m.mode == 2:
+
+            self.play_music(m)
+
             ## change for time
             time_up = self.m.now + self.m.GAME_LENGTH
             if time.time() < time_up:
                 # take out?
                 # clock.tick(self.m.FRAMERATE)
+
 
 
                 # Draw the scene
@@ -152,6 +162,20 @@ class View():
 
         return winner
 
+##################  MUSIC  ###########################
+
+    def play_music(self,model):
+
+            if self.m.music_mode == 0:
+                pygame.mixer.music.load("Music/01 A Night Of Dizzy Spells.mp3")
+                pygame.mixer.music.play(-1)
+                self.m.music_mode = 1
+
+            if self.m.music_mode == 1 and self.m.mode == 2:
+                pygame.mixer.music.stop()
+                pygame.mixer.music.load("Music/03 Chibi Ninja.mp3")
+                pygame.mixer.music.play()
+                self.m.music_mode = 2
 
 ##################  CONTROLLER #######################
 
