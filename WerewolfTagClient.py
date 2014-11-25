@@ -1,5 +1,6 @@
 import pygame
 import GameState
+import AIState
 from MainMenu import MainMenu
 from Game import Game
 
@@ -22,7 +23,6 @@ class WerewolfTagClient:
     screenHeight = 480
     fullScreen = False
     currentState = GameState.GAME
-
     
     def __init__(self):
         pygame.init()
