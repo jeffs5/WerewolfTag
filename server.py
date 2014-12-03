@@ -7,6 +7,7 @@ import random
 handlers = {}  # map client handler to user name
 running_handlers = {}
 players = {}
+powerups = {}
 players_ready = 0
 player_scores = {}
 scores_received = 0
@@ -48,6 +49,11 @@ def choose_wolf():
     it_player_number = player_list[it_player]
 
     players[it_player_number][2] = 'wolf'
+
+def determine_powerup():
+    if game_running:
+        if random.random() < .2:
+            print "powerup"
 
 def colliding(x1, y1):
     width = 16
@@ -145,6 +151,7 @@ server = Serv(port)
 while 1:
     try:
         poll()
+        determine_powerup()
         sleep(0.05)  # seconds
     except KeyboardInterrupt:
         server.close()

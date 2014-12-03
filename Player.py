@@ -25,6 +25,9 @@ class Player(object):
         self.transform_complete = time.time()
         self.transforming = False
         self.speed = 2
+        self.speed_timer = 0
+        self.shovel = False
+        self.wall = False
         self.transform_counter = 0  # used to know which animation to display during transformation
 
     # add parrameter for power ups later
@@ -51,6 +54,12 @@ class Player(object):
 
     def get_player_number(self):
         return self.playerNumber
+
+    def set_speed(self):
+        if self.speed_timer == 0:
+            self.speed = 2
+        else
+            self.speed_timer -= 1
 
     def get_score(self):
         return self.score
