@@ -5,6 +5,7 @@ import os
 import random
 import pygame
 import time
+from Powerup import Powerup
 
 
 class Player(object):
@@ -25,7 +26,7 @@ class Player(object):
         self.transform_complete = time.time()
         self.transforming = False
         self.speed = 2
-        self.speed_timer = 0
+        self.speed_timer = time.time()
         self.shovel = False
         self.wall = False
         self.transform_counter = 0  # used to know which animation to display during transformation
@@ -37,6 +38,7 @@ class Player(object):
         dy,
         borders,
         players,
+        powerups
         ):
 
         # Move each axis separately. Note that this checks for collisions both times.
@@ -44,22 +46,23 @@ class Player(object):
         if len(borders) == 4:
             if dx != 0:
                 self.move_single_axis(dx * self.speed, 0, borders,
-                        players)
+                        players, powerups)
 
             if dy != 0:
                 self.move_single_axis(0, dy * self.speed, borders,
-                        players)
+                        players, powerups)
 
         return players
 
     def get_player_number(self):
         return self.playerNumber
 
-    def set_speed(self):
-        if self.speed_timer == 0:
-            self.speed = 2
-        else
-            self.speed_timer -= 1
+    def start_speed(self, speed):
+        self.speed = speed
+        self.speed_timer = time.time() + 5
+
+    def end_speed(self):
+        self.speed = 2
 
     def get_score(self):
         return self.score
@@ -103,6 +106,7 @@ class Player(object):
         dy,
         borders,
         players,
+        powerups
         ):
 
         # Move the rect
@@ -147,6 +151,11 @@ class Player(object):
                     elif self.is_it != True and player.is_it:
                         player = player.becomes_not_it()
                         self = self.becomes_it()
+
+        for powerup in powerups:
+            if self.rect.colliderect(powerup):
+                powerup.apply_powerup(self)
+                powerups.remove(powerup)
 
         if not collide:
             if self.score >= 0 and not self.is_it:

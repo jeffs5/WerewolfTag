@@ -8,6 +8,7 @@ import pygame
 import Player
 import time
 from Model  import Model
+from Powerup import Powerup
 
 host, port = 'localhost', 8887
 
@@ -62,14 +63,16 @@ class View():
                 # take out?
                 # clock.tick(self.m.FRAMERATE)
 
-
-
                 # Draw the scene
                 self.screen.fill((0, 0, 0))
 
 
-                #check to see if any player is still transforming
+                #check to see if any player is still transforming & checks player powerups
                 for player in self.m.players.values():
+
+                    if time.time() >= player.speed_timer:
+                        player.end_speed()
+
                     if player.transforming:
                         if time.time() >= player.transform_complete:
                             player.finish_transform()
@@ -86,6 +89,9 @@ class View():
                     player.draw_player(self.screen)
                 display_number = self.m.player_number + 1
                 self.print_game_stats(time_up)
+
+                for powerup in self.m.powerups:
+                    powerup.draw_powerup(self.screen)
 
         #once the time is up!
         elif self.m.mode == 3:
@@ -244,6 +250,10 @@ class Controller():
                                 #counter used to determine which transformation animation should be shown
                                 player.transform_counter += 1
 
+                    for powerup in self.m.powerups:
+                        if not powerup.active:
+                            self.m.powerups.remove(powerup)
+
             #once the time is up!
             elif self.m.mode == 3:
                 if not self.m.score_sent:
@@ -290,6 +300,9 @@ class NetworkController(Handler):
             player = self.m.players[str(moved_player)]
             self.move_player(player, msg['move'])
 
+        elif 'powerup' in msg:
+            self.m.powerups.append(Powerup (msg['x'], msg['y'], msg['name']))
+
         elif 'winner_number' in msg:
             self.m.winner_number = msg['winner_number']
             self.m.winner_score = msg['winner_score']
@@ -302,7 +315,7 @@ class NetworkController(Handler):
             print msg
 
     def move_player(self, player, instruction):
-        player.move(instruction[0], instruction[1], self.m.borders, self.m.players.values())
+        player.move(instruction[0], instruction[1], self.m.borders, self.m.players.values(), self.m.powerups)
 
     def send_message(self, message):
         self.do_send(message)

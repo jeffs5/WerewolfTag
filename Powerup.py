@@ -1,36 +1,45 @@
 import pygame
-from Player import Player
+import os
+import random
+import time
 
 class Powerup(object):
 
+	def __init__(self, x, y, name):
 
+		self.name = name
+		self.rect = pygame.Rect(x, y, 16, 16)
+		self.color = (255,255, 0)
+		self.speed = 2
+		self.active = True
 
-	def __init__(self, x, y, value, type):
+		if name == 'speed':
+			print 'speed'
+			self.color = (255, 0, 0)
+			self.speed = 4
 
-		self.name = type
-		self.powerupNumber = int(value)
-        self.rect = pygame.Rect(x, y, 16, 16)
-        self.speed = 2
+		elif name == 'shovel':
+			self.color = (255, 125, 0)
 
-		if self.name is "speed":
-       		self.color = (255, 0, 0)
-       		self.speed = 4
-
-		elif self.name is "shovel":
-       		self.color = (255, 125, 0)
-
-		elif self.name is "wall":
+		elif name == 'wall':
 			self.color = (125, 0, 125)
 
+	def draw_powerup(self, screen):
+		pygame.draw.rect(screen, self.color, self.rect)
 
-	def apply_power(player):
+	def remove_powerup(self):
+		self.color = (0,0,0)
 
-		if self.name is "speed":
-			player.speed = self.speed
-			player.speedTimer = 5
+	def apply_powerup(self, player):
+		if self.active:
+			print self.name + " applied to " + str(player.playerNumber)
+			if self.name == 'speed':
+				player.start_speed(self.speed)
 
-		elif self.name is "shovel":
-       		player.shovel = True
+			elif self.name == 'shovel':
+				player.shovel = True
 
-		elif self.name is "wall":
-			player.wall = True
+			elif self.name == 'wall':
+				player.wall = True
+
+			self.active = False
