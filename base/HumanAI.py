@@ -39,7 +39,6 @@ class HumanAI(Sprite):
 
     def movePath(self, humanPlayer):
         #also check to see if the ai is in the transform state first
-        #before doing all this btchwork LOLOLOLOL
         
         if(self.x - humanPlayer.x == 0): #ww and human on same column
             if(self.y - humanPlayer.y > 0):
