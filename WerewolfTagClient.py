@@ -1,6 +1,5 @@
 import pygame
 import GameState
-import AIState
 from MainMenu import MainMenu
 from Game import Game
 
@@ -45,8 +44,7 @@ class WerewolfTagClient:
                 self.mainMenu.run()
             elif self.currentState == GameState.GAME:
                 self.game.update(key)
-                
-                    
+    
             elif self.currentState == GameState.EXIT:
                 isDone = True
         
