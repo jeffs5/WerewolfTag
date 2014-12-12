@@ -5,6 +5,7 @@ from Player import Player
 class Model():
     def __init__(self):
         self.players = {}
+        self.powerups = []
         self.borders = [pygame.Rect(0,0, 640, 1), pygame.Rect(0,0, 1, 440), pygame.Rect(639,0, 1, 440), pygame.Rect(0,439, 640, 1)]
         self.player_number = 0
         self.GAME_LENGTH = 20
