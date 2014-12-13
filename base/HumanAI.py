@@ -6,6 +6,7 @@ Created on Nov 16, 2014
 import pygame
 from base.Sprite import Sprite
 
+#ai
 class HumanAI(Sprite):
     xSpeed = 1
     ySpeed = 1
