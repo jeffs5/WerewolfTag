@@ -14,7 +14,6 @@ class Powerup(object):
 		self.active = True
 
 		if name == 'speed':
-			print 'speed'
 			self.color = (255, 0, 0)
 			self.speed = 4
 
@@ -32,7 +31,6 @@ class Powerup(object):
 
 	def apply_powerup(self, player):
 		if self.active:
-			print self.name + " applied to " + str(player.playerNumber)
 			if self.name == 'speed':
 				player.start_speed(self.speed)
 
