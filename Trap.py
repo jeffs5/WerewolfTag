@@ -11,5 +11,5 @@ class Trap(object):
         self.color = (122,122,122)
 
     def applyEffect(self, player):
-    	if effect == boost:
+    	if self.effect == boost:
     		player.speed *= 2

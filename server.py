@@ -3,12 +3,15 @@ import Player
 from time import sleep
 import time
 import random
+from Powerup import Powerup
 
 handlers = {}  # map client handler to user name
 running_handlers = {}
 players = {}
 players_ready = 0
 player_scores = {}
+board_x = 624
+board_y = 424
 scores_received = 0
 game_running = False
 
@@ -26,11 +29,11 @@ def msg_everyone(msg):
 
 def create_players():
     for player in running_handlers:
-        x_axis = random.randint(0, 624)
-        y_axis = random.randint(0, 424)
+        x_axis = random.randint(0, board_x)
+        y_axis = random.randint(0, board_y)
         while colliding(x_axis, y_axis):
-            x_axis = random.randint(0, 624)
-            y_axis = random.randint(0, 424)
+            x_axis = random.randint(0, board_x)
+            y_axis = random.randint(0, board_y)
             # print "colliding: " + str(x_axis) + ", " + str(y_axis)
         player_number = running_handlers[player] 
         players[player_number] = [x_axis, y_axis, "human"]
@@ -48,6 +51,21 @@ def choose_wolf():
     it_player_number = player_list[it_player]
 
     players[it_player_number][2] = 'wolf'
+
+def determine_powerup():
+    if game_running:
+        if random.random() < .01:
+            x = random.randint(0, board_x)
+            y = random.randint(0, board_y)
+            rand_val = random.random() 
+            name = 'speed'
+            if rand_val > .33 and rand_val < .66:
+                name = 'wall'
+            elif rand_val > .66:
+                name = 'shovel'
+            # replace x and y with random values
+            distribute_msg({'powerup': True, 'name': name, 'x' : x, 'y' : y})
+
 
 def colliding(x1, y1):
     width = 16
@@ -145,6 +163,7 @@ server = Serv(port)
 while 1:
     try:
         poll()
+        determine_powerup()
         sleep(0.05)  # seconds
     except KeyboardInterrupt:
         server.close()

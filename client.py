@@ -8,8 +8,9 @@ import pygame
 import Player
 import time
 from Model  import Model
+from Powerup import Powerup
 
-host, port = '169.234.72.220', 8887
+host, port = 'localhost', 8887
 
 ##################  VIEW #############################
 
@@ -21,17 +22,21 @@ class View():
         os.environ["SDL_VIDEO_CENTERED"] = "1"
         pygame.init()
 
+        self.play_music(m)
+
         # Set up the display
         pygame.display.set_caption("Play Tag!")
         self.screen = pygame.display.set_mode((640, 440))
-        self.myfont = pygame.font.SysFont("monospace", 16)
+        self.myfont = pygame.font.Font(None, 16)
 
     def display(self):
 
         if self.m.game_running:
             self.screen.fill((0, 0, 0))
             self.print_game_in_progress()
-                 #start screen
+
+
+        #start screen
         elif self.m.mode == 0:
             self.screen.fill((0, 0, 0))
             self.print_title()
@@ -41,25 +46,33 @@ class View():
             # clear screen
             self.screen.fill((0, 0, 0))
 
+
+
             time_up = self.m.now + 5
             if time.time() < time_up:
                 self.print_countdown(time_up)
 
         #actual game
         elif self.m.mode == 2:
+
+            self.play_music(m)
+
             ## change for time
             time_up = self.m.now + self.m.GAME_LENGTH
             if time.time() < time_up:
                 # take out?
                 # clock.tick(self.m.FRAMERATE)
 
-
                 # Draw the scene
                 self.screen.fill((0, 0, 0))
 
 
-                #check to see if any player is still transforming
+                #check to see if any player is still transforming & checks player powerups
                 for player in self.m.players.values():
+
+                    if time.time() >= player.speed_timer:
+                        player.end_speed()
+
                     if player.transforming:
                         if time.time() >= player.transform_complete:
                             player.finish_transform()
@@ -76,6 +89,9 @@ class View():
                     player.draw_player(self.screen)
                 display_number = self.m.player_number + 1
                 self.print_game_stats(time_up)
+
+                for powerup in self.m.powerups:
+                    powerup.draw_powerup(self.screen)
 
         #once the time is up!
         elif self.m.mode == 3:
@@ -152,6 +168,20 @@ class View():
 
         return winner
 
+##################  MUSIC  ###########################
+
+    def play_music(self,model):
+
+            if self.m.music_mode == 0:
+                pygame.mixer.music.load("Music/01 A Night Of Dizzy Spells.mp3")
+                pygame.mixer.music.play(-1)
+                self.m.music_mode = 1
+
+            if self.m.music_mode == 1 and self.m.mode == 2:
+                pygame.mixer.music.stop()
+                pygame.mixer.music.load("Music/03 Chibi Ninja.mp3")
+                pygame.mixer.music.play()
+                self.m.music_mode = 2
 
 ##################  CONTROLLER #######################
 
@@ -220,6 +250,10 @@ class Controller():
                                 #counter used to determine which transformation animation should be shown
                                 player.transform_counter += 1
 
+                    for powerup in self.m.powerups:
+                        if not powerup.active:
+                            self.m.powerups.remove(powerup)
+
             #once the time is up!
             elif self.m.mode == 3:
                 if not self.m.score_sent:
@@ -266,6 +300,9 @@ class NetworkController(Handler):
             player = self.m.players[str(moved_player)]
             self.move_player(player, msg['move'])
 
+        elif 'powerup' in msg:
+            self.m.powerups.append(Powerup (msg['x'], msg['y'], msg['name']))
+
         elif 'winner_number' in msg:
             self.m.winner_number = msg['winner_number']
             self.m.winner_score = msg['winner_score']
@@ -278,7 +315,7 @@ class NetworkController(Handler):
             print msg
 
     def move_player(self, player, instruction):
-        player.move(instruction[0], instruction[1], self.m.borders, self.m.players.values())
+        player.move(instruction[0], instruction[1], self.m.borders, self.m.players.values(), self.m.powerups)
 
     def send_message(self, message):
         self.do_send(message)
