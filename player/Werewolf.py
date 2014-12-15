@@ -16,6 +16,7 @@ class Werewolf(Sprite):
     currentFrame = frames[0]
     
     def __init__(self):
+        Sprite.__init__(self)
         self.surface = pygame.image.load("assets/sprites/werewolf.png")
         self.surface.set_colorkey(self.alphaColor)
         # self.surface.set_alpha(5)

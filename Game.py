@@ -4,6 +4,7 @@ Created on Nov 10, 2014
 @author: Jon
 '''
 import pygame
+from base import Globals
 from player.Human import Human
 from player.Werewolf import Werewolf
 from player.HumanAI import HumanAI
@@ -18,6 +19,7 @@ class Game:
 
     def __init__(self, client):
         self.client = client
+        self.speed = 1
         
     def init(self):
         self.humanPlayer = Human()
@@ -28,18 +30,24 @@ class Game:
         # start running the clock, limits fps to 60
         # self.milliseconds += self.clock.tick_busy_loop(60) 
         
-        if key[pygame.K_LEFT]:     
-            self.humanPlayer.moveLeft()
-        if key[pygame.K_RIGHT]:     
-            self.humanPlayer.moveRight()
-        if key[pygame.K_UP]:     
-            self.humanPlayer.moveUp()
-        if key[pygame.K_DOWN]:   
-            self.humanPlayer.moveDown()    
+        if key[pygame.K_LEFT]:
+            self.humanPlayer.rect.x -= self.speed     
+            self.humanPlayer.setAnimation(Globals.ANIMATION_MOVE_LEFT)
+            self.humanPlayer.update()
+        if key[pygame.K_RIGHT]:
+            self.humanPlayer.rect.x += self.speed      
+            self.humanPlayer.setAnimation(Globals.ANIMATION_MOVE_RIGHT)
+            self.humanPlayer.update()
+        if key[pygame.K_UP]:
+            self.humanPlayer.rect.y -= self.speed      
+            self.humanPlayer.setAnimation(Globals.ANIMATION_MOVE_UP)
+            self.humanPlayer.update()
+        if key[pygame.K_DOWN]:
+            self.humanPlayer.rect.y += self.speed    
+            self.humanPlayer.setAnimation(Globals.ANIMATION_MOVE_DOWN)  
+            self.humanPlayer.update()
                     
         self.humanAIPlayer.movePath(self.humanPlayer)
-                
-        self.humanPlayer.update()
         self.werewolfPlayer.update()
         self.humanAIPlayer.update()
         

@@ -17,6 +17,7 @@ class HumanAI(Sprite):
     currentFrame = frames[0]
     
     def __init__(self):
+        Sprite.__init__(self)
         self.surface = pygame.image.load("assets/sprites/human.png")
         self.x = 200
         self.y = 100
@@ -41,25 +42,25 @@ class HumanAI(Sprite):
     def movePath(self, humanPlayer):
         #also check to see if the ai is in the transform state first
         
-        if(self.x - humanPlayer.x == 0): #ww and human on same column
-            if(self.y - humanPlayer.y > 0):
+        if(self.x - humanPlayer.rect.x == 0): #ww and human on same column
+            if(self.y - humanPlayer.rect.y > 0):
                 self.moveUp()
-            elif(self.y - humanPlayer.y < 0):
+            elif(self.y - humanPlayer.rect.y < 0):
                 self.moveDown()
-        elif(self.y - humanPlayer.y == 0): #ww and human on same row
-            if(self.x - humanPlayer.x > 0):
+        elif(self.y - humanPlayer.rect.y == 0): #ww and human on same row
+            if(self.x - humanPlayer.rect.x > 0):
                 self.moveLeft()
-            elif(self.x - humanPlayer.x < 0):
+            elif(self.x - humanPlayer.rect.x < 0):
                 self.moveRight()
-        elif(self.x - humanPlayer.x > 0): #ww is to the right of the player
-            if(self.y - humanPlayer.y > 0): #ww is south of player, move northwest
+        elif(self.x - humanPlayer.rect.x > 0): #ww is to the right of the player
+            if(self.y - humanPlayer.rect.y > 0): #ww is south of player, move northwest
                 self.moveUp()
                 self.moveLeft()
             else: #move southwest
                 self.moveDown()
                 self.moveLeft()
         else:
-            if(self.y - humanPlayer.y > 0): #move northeast
+            if(self.y - humanPlayer.rect.y > 0): #move northeast
                 self.moveUp()
                 self.moveRight()
             else: #move southeast

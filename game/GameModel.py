@@ -3,18 +3,22 @@
 #
 import time
 import pygame
+from base import Globals
 from player.Player import Player
 
 #
 # Game Model Class Module
 #
 class GameModel():
+    #
+    # default constructor
+    #
     def __init__(self):
         self.players = {}
         self.powerups = []
         self.placeables = []
-        self.board_x = 640
-        self.board_y = 440
+        self.board_x = Globals.WINDOW_WIDTH
+        self.board_y = Globals.WINDOW_HEIGHT
         self.borders = [pygame.Rect(0, 0, self.board_x, 1), pygame.Rect(0, 0, 1, self.board_y),
             pygame.Rect(self.board_x - 1, 0, 1, self.board_y), pygame.Rect(0, self.board_y - 1, self.board_x, 1)]
         self.player_number = 0
@@ -31,6 +35,9 @@ class GameModel():
         self.winner_score = -99
         self.music_mode = 0
 
+    #
+    # initialize game
+    #
     def init_game(self, player_msg):
 
         self.players = {}

@@ -4,40 +4,46 @@
 import os
 import time
 import pygame
+from base import Globals
 
 #
 # Game View Class Module
 #
 class GameView():
+    #
+    # default constructor
+    #
     def __init__(self, model):
-        self.m = model
-
-        # Initialise pygame
+        # initialize pygame
         os.environ["SDL_VIDEO_CENTERED"] = "1"
         pygame.init()
-
-        self.play_music()
-
-        # Set up the display
+        self.screen = pygame.display.set_mode([Globals.WINDOW_WIDTH, Globals.WINDOW_HEIGHT], pygame.FULLSCREEN if Globals.WINDOW_FULLSCREEN else pygame.RESIZABLE)
+        pygame.mouse.set_visible(False)
+        
+        # set caption and font
         pygame.display.set_caption("Play Tag!")
-        self.screen = pygame.display.set_mode((self.m.board_x, self.m.board_y))
         self.myfont = pygame.font.Font(None, 16)
-
+        
+        # set class properties
+        self.m = model
+        self.play_music()
+        
+    #
+    # display game view
+    #
     def display(self):
+        # clear screen surface
+        self.screen.fill((0, 0, 0))
 
         if self.m.game_running:
-            self.screen.fill((0, 0, 0))
             self.print_game_in_progress()
 
         # start screen
         elif self.m.mode == 0:
-            self.screen.fill((0, 0, 0))
             self.print_title()
 
         # countdown screen       
         elif self.m.mode == 1:
-            # clear screen
-            self.screen.fill((0, 0, 0))
             time_up = self.m.now + 5
             if time.time() < time_up:
                 self.print_countdown(time_up)
@@ -51,9 +57,6 @@ class GameView():
             if time.time() < time_up:
                 # take out?
                 # clock.tick(self.m.FRAMERATE)
-
-                # Draw the scene
-                self.screen.fill((0, 0, 0))
 
                 # check to see if any player is still transforming & checks player powerups
                 for player in self.m.players.values():
@@ -90,12 +93,14 @@ class GameView():
 
         # once the time is up!
         elif self.m.mode == 3:
-            backgroundColor = (0, 0, 0)
-            self.screen.fill(backgroundColor)
             self.print_end_game()
 
+        # draw screen to display
         pygame.display.flip()
 
+    #
+    # print game in progress screen
+    #
     def print_game_in_progress(self):
         title = self.myfont.render("Werewolf Tag", 1, (255, 255, 255))
         intro_message = self.myfont.render("A game is currently in progress.", 1, (255, 255, 255))
@@ -104,6 +109,9 @@ class GameView():
         self.screen.blit(intro_message, (180, 190))
         self.screen.blit(instructions, (140, 210))
 
+    #
+    # print game title screen
+    #
     def print_title(self):
         title = self.myfont.render("Werewolf Tag", 1, (255, 255, 255))
         intro_message = self.myfont.render("You are player {0}".format(self.m.player_number + 1), 1, (255, 255, 255))
@@ -114,17 +122,23 @@ class GameView():
         self.screen.blit(instructions1, (210, 230))
         self.screen.blit(instructions2, (180, 245))
 
+    #
+    # print countdown screen
+    #
     def print_countdown(self, time_up):
         instructions = self.myfont.render("Get Ready to start!", 1, (255, 255, 255))
         countdown = self.myfont.render("{0}".format(int(time_up - time.time()) + 1) , 1, (255, 255, 255))
         self.screen.blit(instructions, (210, 210))
         self.screen.blit(countdown, (300, 230))
 
+    #
+    # print game statistics screen
+    #
     def print_game_stats(self, time_up):
         display_number = self.m.player_number + 1
         player = self.m.players[str(self.m.player_number)]
-        x = player.rect.x
-        y = player.rect.y
+        x = player.currentSprite.rect.x
+        y = player.currentSprite.rect.y
 
         player_score = self.myfont.render(
             "Your score: {0}".format(self.m.players[str(self.m.player_number)].get_score()), 1, (255, 255, 255))
@@ -134,6 +148,9 @@ class GameView():
         self.screen.blit(time_left, (250, 10))
         self.screen.blit(pointer, (x - 6, y - 23))
 
+    #
+    # print end game screen
+    #
     def print_end_game(self):
         time_up = self.myfont.render("Time's Up!", 1, (255, 255, 255))
 
@@ -153,6 +170,9 @@ class GameView():
         self.screen.blit(your_text, (200, 225))
         self.screen.blit(restart_text, (180, 270))
 
+    #
+    # select winner helper method
+    #
     def select_winner(self, players):
         winner = self.m.players.values()[0]
         for player in self.m.players.values():
@@ -161,8 +181,10 @@ class GameView():
 
         return winner
 
+    #
+    # play music helper method
+    #
     def play_music(self):
-
             if self.m.music_mode == 0:
                 pygame.mixer.music.load("Music/01 A Night Of Dizzy Spells.mp3")
                 pygame.mixer.music.play(-1)

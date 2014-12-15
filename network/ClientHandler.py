@@ -1,3 +1,6 @@
+#
+# python imports
+#
 import sys
 import os
 import time
@@ -6,15 +9,40 @@ from powerups.Powerup import Powerup
 from powerups.Placeable import Placeable
 from network.NetworkHandler import NetworkHandler, poll
 
+#
+# Client Handler Class Module
+#
 class ClientHandler(NetworkHandler): 
-
+    
+    #
+    # default constructor
+    #
     def __init__(self, model, host, port):
         NetworkHandler.__init__(self, host, port)
         self.m = model
 
+    #
+    # poll messages
+    #
+    def poll_messages(self):
+        poll()
+        sleep(.02)
+        
+    #
+    # send message out
+    #
+    def send_message(self, message):
+        self.do_send(message)
+        
+    #
+    # on close event
+    #
     def on_close(self):
-        pass  # # no need for it to do anything
+        pass
     
+    #
+    # on message event
+    #
     def on_msg(self, msg):
         # updates model
         if 'join' in msg:
@@ -40,7 +68,6 @@ class ClientHandler(NetworkHandler):
             self.m.powerups.append(Powerup (msg['x'], msg['y'], msg['name']))
 
         elif 'place' in msg:
-            
             if msg['name'] is not None:
                 self.m.placeables.append(Placeable (msg['x'], msg['y'], msg['name']))
 
@@ -55,12 +82,8 @@ class ClientHandler(NetworkHandler):
         else:
             print msg
 
+    #
+    # move player helper method
+    #
     def move_player(self, player, instruction):
-        player.move(instruction[0], instruction[1], self.m.borders, self.m.players.values(), self.m.powerups, self.m.placeables)
-
-    def send_message(self, message):
-        self.do_send(message)
-
-    def poll_messages(self):
-        poll()
-        sleep(.02)
+        player.move(instruction[0], instruction[1], instruction[2], self.m.borders, self.m.players.values(), self.m.powerups, self.m.placeables)
