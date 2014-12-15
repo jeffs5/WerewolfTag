@@ -1,7 +1,6 @@
 import pygame
 import GameState
-from MainMenu import MainMenu
-from Game import Game
+import Game
 
 '''
 Created on Nov 10, 2014
@@ -11,7 +10,6 @@ Created on Nov 10, 2014
 
 class WerewolfTagClient:
     
-    mainMenu = MainMenu()
     game = None
     window = None
     display = pygame.display
@@ -40,32 +38,26 @@ class WerewolfTagClient:
                 if event.type==pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                     isDone = True
                     
-            if self.currentState == GameState.MENU:
-                self.mainMenu.run()
-            elif self.currentState == GameState.GAME:
+           
+            if self.currentState == GameState.GAME:
                 self.game.update(key)
     
             elif self.currentState == GameState.EXIT:
                 isDone = True
         
-            if self.currentState == GameState.MENU:
-                self.mainMenu.draw()
-            elif self.currentState == GameState.GAME:
+         
+            if self.currentState == GameState.GAME:
                 self.game.draw()
             
             self.display.flip()
             
     def setState(self, state):
         #end current state
-        if self.currentState == GameState.MENU:
-            self.mainMenu.end()
-        elif self.currentState == GameState.GAME:
+        if self.currentState == GameState.GAME:
             self.game.end()
             
         #initialize next state
-        if state == GameState.MENU:
-            state = self.mainMenu.init()
-        elif state == GameState.GAME:
+        if state == GameState.GAME:
             state = self.game.init()
         
         #update current state

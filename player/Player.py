@@ -1,22 +1,16 @@
-#Testing git
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-import os
-import random
-import pygame
+#
+# python imports
+#
 import time
-from Powerup import Powerup
+import pygame
 
-
+#
+# Player Class Module
+#
 class Player(object):
 
-    def __init__(
-        self,
-        x,
-        y,
-        value,
-        ):
-        
+    # default constructor
+    def __init__(self, x, y, value):
         self.playerNumber = int(value)
         self.rect = pygame.Rect(x, y, 50, 50) 
         self.last_direction = 'right'
@@ -34,28 +28,17 @@ class Player(object):
         self.wall = False
         self.transform_counter = 0  # used to know which animation to display during transformation
 
-    # add parrameter for power ups later
-    def move(
-        self,
-        dx,
-        dy,
-        borders,
-        players,
-        powerups,
-        placeables
-        ):
-
+    # add parameter for power ups later
+    def move(self, dx, dy, borders, players, powerups, placeables):
         # Move each axis separately. Note that this checks for collisions both times.
         if not self.in_hole: 
             if len(borders) == 4:
                 if dx != 0:
                     self.move_single_axis(dx * self.speed, 0, borders,
                             players, powerups, placeables)
-
                 if dy != 0:
                     self.move_single_axis(0, dy * self.speed, borders,
                             players, powerups, placeables)
-
         return players
 
     def get_player_number(self):
@@ -93,11 +76,9 @@ class Player(object):
 
     def becomes_it(self):
         self.start_transform()
-
         return self
 
-        # set speed to faster!
-
+    # set speed to faster!
     def becomes_not_it(self):
         self.color = (255, 255, 255)
         self.is_it = False
@@ -106,7 +87,6 @@ class Player(object):
 
     # starts transformation into wolf, if they are just tagged,
     # they cannot move for 3 seconds
-
     def start_transform(self):
         self.transforming = True
         self.transform_complete = time.time() + 3
@@ -114,31 +94,19 @@ class Player(object):
     # completes the werewolf transformation, should be called only
     # when the global/main clock notices that 3+ seconds have
     # passed and the player is not done transforming
-
     def finish_transform(self):
         self.transforming = False
         self.is_it = True
         self.color = (255, 0, 0)
         transform_counter = 0
 
-    def move_single_axis(
-        self,
-        dx,
-        dy,
-        borders,
-        players,
-        powerups,
-        placeables
-        ):
-
+    def move_single_axis(self, dx, dy, borders, players, powerups, placeables):
         # Move the rect
-
         collide = False
         self.rect.x += dx
         self.rect.y += dy
 
         # If you collide with a wall
-
         for border in borders:
             if self.rect.colliderect(border):
                 collide = True
@@ -155,7 +123,6 @@ class Player(object):
             if self != player:
                 if self.rect.colliderect(player.rect):
                     collide = True
-
                     if dx > 0:
                         self.rect.right = player.rect.left
                     if dx < 0:
@@ -164,7 +131,6 @@ class Player(object):
                         self.rect.bottom = player.rect.top
                     if dy < 0:
                         self.rect.top = player.rect.bottom
-
                     if self.is_it:
                         player = player.becomes_it()
                         self = self.becomes_not_it()
@@ -185,7 +151,6 @@ class Player(object):
 
                 elif placeable.type == 'wall':
                     collide = True
-
                     if dx > 0:
                         self.rect.right = player.rect.left
                     if dx < 0:
@@ -194,7 +159,6 @@ class Player(object):
                         self.rect.bottom = player.rect.top
                     if dy < 0:
                         self.rect.top = player.rect.bottom
-
 
         if not collide:
             if self.score >= 0 and not self.is_it:
@@ -207,5 +171,3 @@ class Player(object):
 
     def is_it(self):
         return self.is_it
-
-

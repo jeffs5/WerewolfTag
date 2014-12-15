@@ -1,7 +1,4 @@
 import pygame
-import os
-import random
-import time
 
 class Powerup(object):
 
