@@ -20,9 +20,7 @@ class Player(object):
         self.currentSprite = self.humanSprite
         self.currentSprite.rect.x = x
         self.currentSprite.rect.y = y
-        
         self.playerNumber = int(value)
-        # self.rect = pygame.Rect(x, y, 50, 50) 
         self.color = (255, 255, 255)
         self.is_it = False
         self.score = 0
@@ -180,13 +178,13 @@ class Player(object):
                     pygame.mixer.Sound("Music/Placeable.wav").play()
                     collide = True
                     if dx > 0:
-                        self.rect.right = placeable.rect.left
+                        self.currentSprite.rect.right = placeable.rect.left
                     if dx < 0:
-                        self.rect.left = placeable.rect.right
+                        self.currentSprite.rect.left = placeable.rect.right
                     if dy > 0:
-                        self.rect.bottom = placeable.rect.top
+                        self.currentSprite.rect.bottom = placeable.rect.top
                     if dy < 0:
-                        self.rect.top = placeable.rect.bottom
+                        self.currentSprite.rect.top = placeable.rect.bottom
 
         if not collide:
             if self.score >= 0 and not self.is_it:

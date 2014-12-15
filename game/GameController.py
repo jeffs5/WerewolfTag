@@ -16,7 +16,7 @@ class GameController():
     def __init__(self, model, network):
         self.m = model
         self.n = network
-        self.controls = {pygame.K_LEFT : (-1, 0, Globals.DIRECTION_LEFT), pygame.K_RIGHT : (1, 0, Globals.DIRECTION_LEFT), pygame.K_UP : (0, -1, Globals.DIRECTION_UP), pygame.K_DOWN : (0, 1, Globals.DIRECTION_DOWN), pygame.K_c : (1, 1, Globals.DIRECTION_NONE)}
+        self.controls = {pygame.K_LEFT : (-1, 0, Globals.DIRECTION_LEFT), pygame.K_RIGHT : (1, 0, Globals.DIRECTION_RIGHT), pygame.K_UP : (0, -1, Globals.DIRECTION_UP), pygame.K_DOWN : (0, 1, Globals.DIRECTION_DOWN), pygame.K_c : (1, 1, Globals.DIRECTION_NONE)}
     
     #
     # get commands
