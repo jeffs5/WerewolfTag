@@ -28,6 +28,7 @@ class Powerup(object):
 
 	def apply_powerup(self, player):
 		if self.active:
+			pygame.mixer.Sound("Music/Powerup.wav").play()
 			if self.name == 'speed':
 				player.start_speed(self.speed)
 

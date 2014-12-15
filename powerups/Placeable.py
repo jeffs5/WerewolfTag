@@ -16,5 +16,6 @@ class Placeable(object):
     def draw_placeable(self, screen):
         pygame.draw.rect(screen, self.color, self.rect)
 
+        #not used
     def trigger_hole(self):
         self.active = False

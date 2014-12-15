@@ -15,8 +15,7 @@ class GameModel():
         self.placeables = []
         self.board_x = 640
         self.board_y = 440
-        self.borders = [pygame.Rect(0, 0, self.board_x, 1), pygame.Rect(0, 0, 1, self.board_y),
-            pygame.Rect(self.board_x - 1, 0, 1, self.board_y), pygame.Rect(0, self.board_y - 1, self.board_x, 1)]
+        self.borders = []
         self.player_number = 0
         self.GAME_LENGTH = 20
         self.mode = 0
@@ -31,11 +30,14 @@ class GameModel():
         self.winner_score = -99
         self.music_mode = 0
 
-    def init_game(self, player_msg):
+    def init_game(self, player_msg, board):
 
         self.players = {}
         self.loading = False
         self.running = True
+
+        for border in board:
+            self.borders.append(pygame.Rect(border[0], border[1], border[2], border[3]))
 
         for player in player_msg.items():
             # player[0] is player_number
