@@ -1,4 +1,5 @@
 import random
+import pygame
 from network.NetworkHandler import NetworkHandler
 
 handlers = {}  # map client handler to user name
@@ -6,8 +7,9 @@ running_handlers = {}
 players = {}
 players_ready = 0
 player_scores = {}
-board_x = 624
-board_y = 424
+board_x = 625
+board_y = 425
+board = []
 scores_received = 0
 game_running = False
 
@@ -21,11 +23,24 @@ def msg_everyone(msg):
     for handler in handlers:
         handler.do_send(msg)
 
+def create_board():
+    global board, board_x, board_y
+    if len(board) != 0:
+        board = []
+    board.append([0,0, board_x, 1])
+    board.append([0, 0, 1, board_y])
+    board.append([board_x - 1, 0, 1, board_y])
+    board.append([0, board_y - 1, board_x, 1])
+    # [pygame.Rect(0, 0, board_x, 1), pygame.Rect(0, 0, 1, board_y),
+    #  pygame.Rect(board_x - 1, 0, 1, board_y), pygame.Rect(0, board_y - 1, board_x, 1)]
+
+
 def create_players():
     for player in running_handlers:
-        x_axis = random.randint(0, board_x)
-        y_axis = random.randint(0, board_y)
-        while colliding(x_axis, y_axis):
+        #50 is the size of the player box
+        x_axis = random.randint(0, board_x - 50)
+        y_axis = random.randint(0, board_y - 50)
+        while colliding(x_axis, y_axis, 50, 50):
             x_axis = random.randint(0, board_x)
             y_axis = random.randint(0, board_y)
             # print "colliding: " + str(x_axis) + ", " + str(y_axis)
@@ -50,8 +65,9 @@ def determine_powerup():
     if game_running:
         # .01 works well as a value
         if random.random() < .01:
-            x = random.randint(0, board_x)
-            y = random.randint(0, board_y)
+            # 25 is the size of the powerup box
+            x = random.randint(0, board_x - 25)
+            y = random.randint(0, board_y- 25)
             rand_val = random.random() 
             name = 'speed'
             if rand_val > .33 and rand_val < .66:
@@ -62,14 +78,15 @@ def determine_powerup():
             distribute_msg({'powerup': True, 'name': name, 'x' : x, 'y' : y})
 
 
-def colliding(x1, y1):
-    width = 16
-    height = 16
+def colliding(x1, y1, width, height):
     for player in players.items():
         x2 = player[1][0]
         y2 = player[1][1]
         # print str(x1) + ", " + str(y1) + ": " + str(x2) + ", " + str(y2)
-        return x1 < x2 + width and y1 < y2 + height and x2 < x1 + width and y2 < y1 + height
+        if x1 < x2 + width and y1 < y2 + height and x2 < x1 + width and y2 < y1 + height:
+            return x1 < x2 + width and y1 < y2 + height and x2 < x1 + width and y2 < y1 + height
+
+    return False
 
 def determine_winner(player_scores):
     # player
@@ -107,7 +124,7 @@ class ServerHandler(NetworkHandler):
             game_running = False
     
     def on_msg(self, msg):
-        global players_ready, players, handlers, game_running, running_handlers, player_scores, scores_received
+        global players_ready, players, handlers, game_running, running_handlers, player_scores, scores_received, board
 
         if 'move' in msg or 'place' in msg:
             distribute_msg(msg)
@@ -122,9 +139,10 @@ class ServerHandler(NetworkHandler):
             # the players will be "created" and sent out
             players_ready += 1
             if players_ready == len(running_handlers):
+                create_board()
                 create_players()
                 choose_wolf()
-                distribute_msg({"start_state": players})
+                distribute_msg({"start_state": players, "board": board})
         elif 'score' in msg:
             scores_received += 1
             player_scores[msg['player_number']] = msg['score']

@@ -4,6 +4,7 @@
 import sys
 import os
 import time
+import pygame
 from time import sleep
 from powerups.Powerup import Powerup
 from powerups.Placeable import Placeable
@@ -55,7 +56,7 @@ class ClientHandler(NetworkHandler):
             self.m.now = time.time()
 
         elif 'start_state' in msg:
-            self.m.init_game(msg['start_state'])
+            self.m.init_game(msg['start_state'], msg['board'])
             self.m.mode = 2
             self.m.now = time.time()
 
@@ -69,6 +70,7 @@ class ClientHandler(NetworkHandler):
 
         elif 'place' in msg:
             if msg['name'] is not None:
+                pygame.mixer.Sound("Music/Placeable.wav").play()
                 self.m.placeables.append(Placeable (msg['x'], msg['y'], msg['name']))
 
         elif 'winner_number' in msg:

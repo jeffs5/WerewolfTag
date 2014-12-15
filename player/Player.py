@@ -174,17 +174,19 @@ class Player(object):
                 if placeable.type == 'hole':
                     self.start_hole()
                     placeables.remove(placeable)
+                    pygame.mixer.Sound("Music/Placeable.wav").play()
 
                 elif placeable.type == 'wall':
+                    pygame.mixer.Sound("Music/Placeable.wav").play()
                     collide = True
                     if dx > 0:
-                        self.currentSprite.rect.right = player.rect.left
+                        self.rect.right = placeable.rect.left
                     if dx < 0:
-                        self.currentSprite.rect.left = player.rect.right
+                        self.rect.left = placeable.rect.right
                     if dy > 0:
-                        self.currentSprite.rect.bottom = player.rect.top
+                        self.rect.bottom = placeable.rect.top
                     if dy < 0:
-                        self.currentSprite.rect.top = player.rect.bottom
+                        self.rect.top = placeable.rect.bottom
 
         if not collide:
             if self.score >= 0 and not self.is_it:

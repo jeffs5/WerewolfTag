@@ -153,12 +153,17 @@ class GameView():
     #
     def print_end_game(self):
         time_up = self.myfont.render("Time's Up!", 1, (255, 255, 255))
-
         if self.m.player_number != self.m.winner_number:
+            if self.m.music_mode == 2:
+                #pygame.mixer.Sound("Music/Lose.wav").play(3)
+                self.m.music_mode = 3
             winner_text = self.myfont.render(
                 "The winner is: Player {0} with a score of {1}".format((self.m.winner_number + 1), self.m.winner_score), 1, (255, 255, 255))
             self.screen.blit(winner_text, (110, 210))
         else:
+            if self.m.music_mode == 2:
+                #pygame.mixer.Sound("Music/Win.wav").play(3)
+                self.m.music_mode = 3
             winner_text = self.myfont.render("You won!", 1, (255, 255, 255))
             self.screen.blit(winner_text, (250, 210))
 
