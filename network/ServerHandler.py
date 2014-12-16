@@ -1,5 +1,5 @@
 import random
-import pygame
+from base import Globals
 from network.NetworkHandler import NetworkHandler
 
 handlers = {}  # map client handler to user name
@@ -7,8 +7,8 @@ running_handlers = {}
 players = {}
 players_ready = 0
 player_scores = {}
-board_x = 625
-board_y = 425
+board_x = Globals.WINDOW_WIDTH
+board_y = Globals.WINDOW_HEIGHT
 board = []
 scores_received = 0
 game_running = False
@@ -27,7 +27,7 @@ def create_board():
     global board, board_x, board_y
     if len(board) != 0:
         board = []
-    board.append([0,0, board_x, 1])
+    board.append([0, 0, board_x, 1])
     board.append([0, 0, 1, board_y])
     board.append([board_x - 1, 0, 1, board_y])
     board.append([0, board_y - 1, board_x, 1])
@@ -37,7 +37,7 @@ def create_board():
 
 def create_players():
     for player in running_handlers:
-        #50 is the size of the player box
+        # 50 is the size of the player box
         x_axis = random.randint(0, board_x - 50)
         y_axis = random.randint(0, board_y - 50)
         while colliding(x_axis, y_axis, 50, 50):
@@ -67,7 +67,7 @@ def determine_powerup():
         if random.random() < .01:
             # 25 is the size of the powerup box
             x = random.randint(0, board_x - 25)
-            y = random.randint(0, board_y- 25)
+            y = random.randint(0, board_y - 25)
             rand_val = random.random() 
             name = 'speed'
             if rand_val > .33 and rand_val < .66:
