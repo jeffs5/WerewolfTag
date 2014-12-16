@@ -30,6 +30,7 @@ class GameModel():
         self.winner_number = 99
         self.winner_score = -99
         self.music_mode = 0
+        
 
     def init_game(self, player_msg, board):
 
