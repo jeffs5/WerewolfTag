@@ -26,7 +26,6 @@ class WerewolfTagClient:
         pygame.mouse.set_visible(False)
         self.mixer.init()
         self.game = Game(self)
-        self.game.init()
         
     def run(self):
         isDone = False
