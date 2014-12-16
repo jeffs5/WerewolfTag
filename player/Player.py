@@ -17,7 +17,7 @@ class Player(object):
         # set player sprite
         self.humanSprite = Human()
         self.werewolfSprite = Werewolf()
-        self.currentSprite = self.humanSprite
+        self.currentSprite = self.werewolfSprite
         self.currentSprite.rect.x = x
         self.currentSprite.rect.y = y
         self.playerNumber = int(value)
