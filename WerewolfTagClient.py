@@ -4,7 +4,6 @@ from Game import Game
 
 '''
 Created on Nov 10, 2014
-
 @author: Jon, Angel
 '''
 
@@ -67,7 +66,3 @@ class WerewolfTagClient:
         self.mixer.quit()
         self.display.quit()
         pygame.quit()
-    
-    
-    
-    
