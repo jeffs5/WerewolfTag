@@ -145,16 +145,16 @@ class Player(object):
 
         for player in players:
             if self != player:
-                if self.currentSprite.rect.colliderect(player.rect):
+                if self.currentSprite.rect.colliderect(player.currentSprite.rect):
                     collide = True
                     if dx > 0:
-                        self.currentSprite.rect.right = player.rect.left
+                        self.currentSprite.rect.right = player.currentSprite.rect.left
                     if dx < 0:
-                        self.currentSprite.rect.left = player.rect.right
+                        self.currentSprite.rect.left = player.currentSprite.rect.right
                     if dy > 0:
-                        self.currentSprite.rect.bottom = player.rect.top
+                        self.currentSprite.rect.bottom = player.currentSprite.rect.top
                     if dy < 0:
-                        self.currentSprite.rect.top = player.rect.bottom
+                        self.currentSprite.rect.top = player.currentSprite.rect.bottom
                     if self.is_it:
                         player = player.becomes_it()
                         self = self.becomes_not_it()
