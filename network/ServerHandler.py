@@ -87,6 +87,7 @@ def colliding(x1, y1, width, height):
             return x1 < x2 + width and y1 < y2 + height and x2 < x1 + width and y2 < y1 + height
 
     return False
+    
 
 def determine_winner(player_scores):
     # player
