@@ -51,7 +51,7 @@ class WerewolfTagClient:
             if self.currentState == GameState.MENU:
                 self.mainMenu.draw()
             elif self.currentState == GameState.GAME:
-                self.game.draw()
+                self.game.draw(self.screenWidth, self.screenHeight)
             
             self.display.flip()
             
