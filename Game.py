@@ -30,8 +30,8 @@ class Game:
         if key[pygame.K_DOWN]:
             self.player.update(0, 2, Globals.DIRECTION_DOWN)
             
-        #self.ai.update(self.player, {}, self.multiplayerMode)
-        self.ai.update(self.player)
+        self.ai.update(self.player, {}, self.multiplayerMode)
+        #self.ai.update(self.player)
         
     def draw(self):
         self.player.draw(self.client.window)

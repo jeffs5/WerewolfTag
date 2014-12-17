@@ -3,7 +3,7 @@ from base import Globals
 from player.Human import Human
 from player.Werewolf import Werewolf
 
-class AIPlayer(object):
+class WerewolfAIPlayer(object):
     
     def __init__(self, aiMode):
         self.xSpeed = 1
