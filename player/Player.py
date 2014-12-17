@@ -102,6 +102,7 @@ class Player(object):
     def start_transform(self):
         self.transforming = True
         self.transform_complete = time.time() + 3
+        pygame.mixer.Sound("Music/Transform.wav").play()
         # set transformation animation
         self.currentSprite.setAnimation(Globals.ANIMATION_TRANSFORM)
         self.currentSprite.update()
@@ -204,7 +205,7 @@ class Player(object):
         if not collide:
             if self.score >= 0 and not self.is_it:
                 self.score -= 1
-            else:
+            elif not self.is_it:
                 self.score = 0
     #
     # swap sprite helper method
