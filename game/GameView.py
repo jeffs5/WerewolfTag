@@ -89,8 +89,8 @@ class GameView():
                         player.transform_counter += 1
 
                     player.draw_player(self.screen)
-                    
-                display_number = self.m.player_number + 1
+                
+                # draw game stats
                 self.print_game_stats(time_up)
 
                 for powerup in self.m.powerups:
@@ -143,7 +143,6 @@ class GameView():
     # print game statistics screen
     #
     def print_game_stats(self, time_up):
-        display_number = self.m.player_number + 1
         player = self.m.players[str(self.m.player_number)]
         x = player.currentSprite.rect.x
         y = player.currentSprite.rect.y

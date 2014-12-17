@@ -11,6 +11,9 @@ BORDER_HEIGHT = 440
 NETWORK_HOST = "localhost"
 NETWORK_PORT = 8887
 
+# Game Model Properties
+GAME_LENGTH = 100
+
 # Sprite File Paths
 SPRITE_FILEPATH_WEREWOLF = "assets/sprites/werewolf.png"
 SPRITE_FILEPATH_HUMAN = "assets/sprites/human.png"

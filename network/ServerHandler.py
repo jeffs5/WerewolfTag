@@ -1,5 +1,5 @@
 import random
-import pygame
+#import pygame
 from base import Globals
 from network.NetworkHandler import NetworkHandler
 

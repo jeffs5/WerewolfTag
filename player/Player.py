@@ -17,7 +17,7 @@ class Player(object):
         # set player sprite
         self.humanSprite = Human()
         self.werewolfSprite = Werewolf()
-        self.currentSprite = self.werewolfSprite
+        self.currentSprite = self.humanSprite
         self.currentSprite.rect.x = x
         self.currentSprite.rect.y = y
         self.playerNumber = int(value)
@@ -84,14 +84,16 @@ class Player(object):
         self.score += score
 
     def becomes_it(self):
+        # swap sprite to werewolf sprite
+        self.swap_sprite(self.werewolfSprite)
         self.start_transform()
         return self
 
     # set speed to faster!
     def becomes_not_it(self):
-        self.color = (255, 255, 255)
+        # swap sprite to human sprite
+        self.swap_sprite(self.humanSprite)
         self.is_it = False
-
         return self
 
     # starts transformation into wolf, if they are just tagged,
@@ -106,7 +108,6 @@ class Player(object):
     def finish_transform(self):
         self.transforming = False
         self.is_it = True
-        self.color = (255, 0, 0)
         self.transform_counter = 0
 
     #
@@ -191,7 +192,18 @@ class Player(object):
                 self.score -= 1
             else:
                 self.score = 0
-                 
+    #
+    # swap sprite helper method
+    #
+    def swap_sprite(self, swapSprite):
+        # store previous x and y position
+        prevX = self.currentSprite.rect.x
+        prevY = self.currentSprite.rect.y
+        
+        # update current sprite
+        self.currentSprite = swapSprite
+        self.currentSprite.rect.x = prevX
+        self.currentSprite.rect.y = prevY
     #
     # draw player 
     #
