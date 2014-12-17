@@ -163,7 +163,7 @@ class Player(object):
                         self = self.becomes_it()
 
         for powerup in powerups:
-            if self.currentSprite.rect.colliderect(powerup):
+            if self.currentSprite.rect.colliderect(powerup) and not self.is_it:
                 powerup.apply_powerup(self)
                 powerups.remove(powerup)
 
