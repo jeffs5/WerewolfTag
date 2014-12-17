@@ -143,9 +143,9 @@ class GameView():
         player_score = self.myfont.render(
             "Your score: {0}".format(self.m.players[str(self.m.player_number)].get_score()), 1, (255, 255, 255))
         time_left = self.myfont.render("Time left: {0}".format(int(time_up - time.time())), 1, (255, 255, 255))
-        pointer = self.myfont.render(" {0}".format(self.m.player_number + 1), 1, (255, 255, 255))
-        self.screen.blit(player_score, (16, 400))
-        self.screen.blit(time_left, (250, 10))
+        pointer = self.myfont.render("   {0}".format(self.m.player_number + 1), 1, (255, 255, 255))
+        self.screen.blit(player_score, (16, Globals.BORDER_HEIGHT + 10))
+        self.screen.blit(time_left, (Globals.BORDER_WIDTH/2, Globals.BORDER_HEIGHT + 10))
         self.screen.blit(pointer, (x - 6, y - 23))
 
     #

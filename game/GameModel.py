@@ -14,8 +14,8 @@ class GameModel():
         self.players = {}
         self.powerups = []
         self.placeables = []
-        self.board_x = Globals.WINDOW_WIDTH
-        self.board_y = Globals.WINDOW_HEIGHT
+        self.board_x = Globals.BORDER_WIDTH
+        self.board_y = Globals.BORDER_HEIGHT
         self.borders = []
         self.player_number = 0
         self.GAME_LENGTH = 20

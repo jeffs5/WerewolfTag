@@ -65,7 +65,7 @@ class GameController():
                                 moving_player = self.m.players[str(self.m.player_number)]
                                 placeable = moving_player.place_placeable()
                                 # change for correct placeing
-                                self.n.do_send({'place': True, 'x': random.randint(0, self.m.board_x), 'y': random.randint(0, self.m.board_y), 'name': placeable})
+                                self.n.do_send({'place': True, 'x': random.randint(0, self.m.board_x - 30), 'y': random.randint(0, self.m.board_y - 30), 'name': placeable})
                             else:
                                 instruction = self.controls.get(pressed)
                                 moving_player = self.m.players[str(self.m.player_number)]
