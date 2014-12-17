@@ -3,13 +3,27 @@ WINDOW_WIDTH = 640
 WINDOW_HEIGHT = 480
 WINDOW_FULLSCREEN = False
 
+# Board Properties
+BORDER_WIDTH = 640
+BORDER_HEIGHT = 440
+
 # Network Constants
 NETWORK_HOST = "localhost"
 NETWORK_PORT = 8887
 
+# Game Model Properties
+GAME_LENGTH = 100
+
 # Sprite File Paths
 SPRITE_FILEPATH_WEREWOLF = "assets/sprites/werewolf.png"
 SPRITE_FILEPATH_HUMAN = "assets/sprites/human.png"
+SPRITE_FILEPATH_SPEED = "assets/sprites/shoe.png"
+SPRITE_FILEPATH_HAMMER = "assets/sprites/hammer.png"
+SPRITE_FILEPATH_SHOVEL = "assets/sprites/shovel.png"
+SPRITE_FILEPATH_HOLE = "assets/sprites/hole.png"
+SPRITE_FILEPATH_BARN = "assets/sprites/barn.png"
+SPRITE_FILEPATH_GAMEBACKGROUD = "assets/sprites/gamebackground.png"
+
 
 # Directions States
 DIRECTION_NONE = 0

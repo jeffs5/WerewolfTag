@@ -61,11 +61,12 @@ class GameController():
                     for pressed in self.controls:
                         if key[pressed]:
                             if pressed == pygame.K_c: 
-                                # instruction = self.controls.get(pressed)
-                                moving_player = self.m.players[str(self.m.player_number)]
-                                placeable = moving_player.place_placeable()
-                                # change for correct placeing
-                                self.n.do_send({'place': True, 'x': random.randint(0, self.m.board_x), 'y': random.randint(0, self.m.board_y), 'name': placeable})
+                                if not (self.m.players[str(self.m.player_number)]).is_it:
+                                    # instruction = self.controls.get(pressed)
+                                    moving_player = self.m.players[str(self.m.player_number)]
+                                    placeable = moving_player.place_placeable()
+                                    # change for correct placeing
+                                    self.n.do_send({'place': True, 'x': random.randint(0, self.m.board_x - 30), 'y': random.randint(0, self.m.board_y - 30), 'name': placeable})
                             else:
                                 instruction = self.controls.get(pressed)
                                 moving_player = self.m.players[str(self.m.player_number)]
@@ -78,6 +79,9 @@ class GameController():
                         if not player.is_it and not player.transforming:
                             player.increase_score(1)
                         if player.transforming:
+                            # update player transforming animation
+                            player.on_transforming()
+                            
                             if time.time() >= player.transform_complete:
                                 player.finish_transform()
 

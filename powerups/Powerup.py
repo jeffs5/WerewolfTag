@@ -1,4 +1,5 @@
 import pygame
+from base import Globals
 
 class Powerup(object):
 
@@ -6,22 +7,25 @@ class Powerup(object):
 
 		self.name = name
 		self.rect = pygame.Rect(x, y, 16, 16)
-		self.color = (255,255, 0)
 		self.speed = 2
 		self.active = True
 
 		if name == 'speed':
-			self.color = (255, 0, 0)
+			self.surface = pygame.image.load(Globals.SPRITE_FILEPATH_SPEED)
 			self.speed = 4
 
 		elif name == 'shovel':
-			self.color = (255, 125, 0)
+			self.surface = pygame.image.load(Globals.SPRITE_FILEPATH_SHOVEL)
 
 		elif name == 'wall':
-			self.color = (125, 0, 125)
+			self.surface = pygame.image.load(Globals.SPRITE_FILEPATH_HAMMER)
+
+		self.rect = self.surface.get_rect() 
+		self.rect.topleft = [x,y]
 
 	def draw_powerup(self, screen):
-		pygame.draw.rect(screen, self.color, self.rect)
+		screen.blit(self.surface, self.rect)
+		#pygame.draw.rect(screen, self.color, self.rect)
 
 	def remove_powerup(self):
 		self.color = (0,0,0)

@@ -3,6 +3,7 @@
 #
 import time
 import pygame
+from base import Globals
 from player.Human import Human
 from player.Werewolf import Werewolf
 
@@ -17,7 +18,7 @@ class Player(object):
         # set player sprite
         self.humanSprite = Human()
         self.werewolfSprite = Werewolf()
-        self.currentSprite = self.werewolfSprite
+        self.currentSprite = self.humanSprite
         self.currentSprite.rect.x = x
         self.currentSprite.rect.y = y
         self.playerNumber = int(value)
@@ -84,14 +85,16 @@ class Player(object):
         self.score += score
 
     def becomes_it(self):
+        # swap sprite to werewolf sprite
+        self.swap_sprite(self.werewolfSprite)
         self.start_transform()
         return self
 
     # set speed to faster!
     def becomes_not_it(self):
-        self.color = (255, 255, 255)
+        # swap sprite to human sprite
+        self.swap_sprite(self.humanSprite)
         self.is_it = False
-
         return self
 
     # starts transformation into wolf, if they are just tagged,
@@ -99,6 +102,15 @@ class Player(object):
     def start_transform(self):
         self.transforming = True
         self.transform_complete = time.time() + 3
+        # set transformation animation
+        self.currentSprite.setAnimation(Globals.ANIMATION_TRANSFORM)
+        self.currentSprite.update()
+
+    #
+    # upate sprite on transforming
+    #
+    def on_transforming(self):
+        self.currentSprite.update()
 
     # completes the werewolf transformation, should be called only
     # when the global/main clock notices that 3+ seconds have
@@ -106,8 +118,11 @@ class Player(object):
     def finish_transform(self):
         self.transforming = False
         self.is_it = True
-        self.color = (255, 0, 0)
         self.transform_counter = 0
+        
+        # stop transformation animation
+        self.currentSprite.setAnimation(Globals.ANIMATION_MOVE_DOWN)
+        self.currentSprite.update()
 
     #
     # is player it?
@@ -163,7 +178,7 @@ class Player(object):
                         self = self.becomes_it()
 
         for powerup in powerups:
-            if self.currentSprite.rect.colliderect(powerup):
+            if self.currentSprite.rect.colliderect(powerup) and not self.is_it:
                 powerup.apply_powerup(self)
                 powerups.remove(powerup)
 
@@ -191,7 +206,19 @@ class Player(object):
                 self.score -= 1
             else:
                 self.score = 0
-                 
+    #
+    # swap sprite helper method
+    #
+    def swap_sprite(self, swapSprite):
+        # store previous x and y position
+        prevX = self.currentSprite.rect.x
+        prevY = self.currentSprite.rect.y
+        
+        # update current sprite
+        self.currentSprite = swapSprite
+        self.currentSprite.currentFrame = 0
+        self.currentSprite.rect.x = prevX
+        self.currentSprite.rect.y = prevY
     #
     # draw player 
     #

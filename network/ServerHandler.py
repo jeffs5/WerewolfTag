@@ -1,5 +1,6 @@
 import random
-import pygame
+#import pygame
+from base import Globals
 from network.NetworkHandler import NetworkHandler
 
 handlers = {}  # map client handler to user name
@@ -7,8 +8,8 @@ running_handlers = {}
 players = {}
 players_ready = 0
 player_scores = {}
-board_x = 625
-board_y = 425
+board_x = Globals.BORDER_WIDTH
+board_y = Globals.BORDER_HEIGHT
 board = []
 scores_received = 0
 game_running = False
