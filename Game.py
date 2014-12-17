@@ -32,6 +32,7 @@ class Game:
         self.fifthHumanAi.currentSprite.rect.y = random.randint(0,440)
         self.playerList = {self.player, self.humanAi, self.secondHumanAi, 
                            self.thirdHumanAi, self.fourthHumanAi, self.fifthHumanAi}
+        self.gameBackground = pygame.image.load(Globals.SPRITE_FILEPATH_GAMEBACKGROUD)
         
     def update(self, key):
         # start running the clock, limits fps to 60
@@ -54,6 +55,7 @@ class Game:
         self.fifthHumanAi.update(self.ai)
         
     def draw(self):
+        self.client.window.blit(self.gameBackground, (0, 0))
         self.player.draw(self.client.window)
         self.ai.draw(self.client.window)
         self.humanAi.draw(self.client.window)
