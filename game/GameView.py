@@ -23,6 +23,7 @@ class GameView():
         # set caption and font
         pygame.display.set_caption("Play Tag!")
         self.myfont = pygame.font.Font(None, 16)
+        self.gameBackground = pygame.image.load(Globals.SPRITE_FILEPATH_GAMEBACKGROUD)
         
         # set class properties
         self.m = model
@@ -58,6 +59,7 @@ class GameView():
                 # take out?
                 # clock.tick(self.m.FRAMERATE)
 
+                self.screen.blit(self.gameBackground, (0, 0))
                 # check to see if any player is still transforming & checks player powerups
                 for player in self.m.players.values():
 
@@ -82,7 +84,6 @@ class GameView():
 
                     player.draw_player(self.screen)
                     
-                display_number = self.m.player_number + 1
                 self.print_game_stats(time_up)
 
                 for powerup in self.m.powerups:
@@ -135,7 +136,6 @@ class GameView():
     # print game statistics screen
     #
     def print_game_stats(self, time_up):
-        display_number = self.m.player_number + 1
         player = self.m.players[str(self.m.player_number)]
         x = player.currentSprite.rect.x
         y = player.currentSprite.rect.y
@@ -155,14 +155,14 @@ class GameView():
         time_up = self.myfont.render("Time's Up!", 1, (255, 255, 255))
         if self.m.player_number != self.m.winner_number:
             if self.m.music_mode == 2:
-                #pygame.mixer.Sound("Music/Lose.wav").play(3)
+                # pygame.mixer.Sound("Music/Lose.wav").play(3)
                 self.m.music_mode = 3
             winner_text = self.myfont.render(
                 "The winner is: Player {0} with a score of {1}".format((self.m.winner_number + 1), self.m.winner_score), 1, (255, 255, 255))
             self.screen.blit(winner_text, (110, 210))
         else:
             if self.m.music_mode == 2:
-                #pygame.mixer.Sound("Music/Win.wav").play(3)
+                # pygame.mixer.Sound("Music/Win.wav").play(3)
                 self.m.music_mode = 3
             winner_text = self.myfont.render("You won!", 1, (255, 255, 255))
             self.screen.blit(winner_text, (250, 210))
