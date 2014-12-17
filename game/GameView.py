@@ -191,12 +191,12 @@ class GameView():
     #
     def play_music(self):
             if self.m.music_mode == 0:
-                pygame.mixer.music.load("Music/01 A Night Of Dizzy Spells.mp3")
+                pygame.mixer.music.load("Music/01 A Night Of Dizzy Spells.wav")
                 pygame.mixer.music.play(-1)
                 self.m.music_mode = 1
 
             if self.m.music_mode == 1 and self.m.mode == 2:
                 pygame.mixer.music.stop()
-                pygame.mixer.music.load("Music/03 Chibi Ninja.mp3")
+                pygame.mixer.music.load("Music/03 Chibi Ninja.wav")
                 pygame.mixer.music.play()
                 self.m.music_mode = 2
