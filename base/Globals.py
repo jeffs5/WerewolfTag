@@ -8,7 +8,7 @@ BORDER_WIDTH = 640
 BORDER_HEIGHT = 440
 
 # Network Constants
-NETWORK_HOST = "localhost"
+NETWORK_HOST = "169.234.41.252"
 NETWORK_PORT = 8887
 
 # Game Model Properties
