@@ -17,7 +17,7 @@ class WerewolfTagClient:
     frameRate = 60
     screenWidth = 640
     screenHeight = 480
-    fullScreen = False
+    fullScreen = True
     currentState = GameState.GAME
     
     def __init__(self):

@@ -10,7 +10,7 @@ class Game:
     def __init__(self, client):
         self.client = client
         self.multiplayerMode = False
-        self.ai = WerewolfAIPlayer(Globals.AI_EASY_MODE)
+        self.ai = HumanAIPlayer(Globals.AI_EASY_MODE)
         self.ai.currentSprite.rect.x = 300
         self.ai.currentSprite.rect.y = 200
         self.player = SinglePlayer()
@@ -30,8 +30,8 @@ class Game:
         if key[pygame.K_DOWN]:
             self.player.update(0, 2, Globals.DIRECTION_DOWN)
             
-        self.ai.update(self.player, {}, self.multiplayerMode)
-        #self.ai.update(self.player)
+        #self.ai.update(self.player, {}, self.multiplayerMode)
+        self.ai.update(self.player)
         
     def draw(self):
         self.player.draw(self.client.window)

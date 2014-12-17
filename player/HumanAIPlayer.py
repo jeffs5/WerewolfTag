@@ -13,10 +13,41 @@ class HumanAIPlayer(object):
         self.humanSprite = Human()
         self.currentSprite = self.humanSprite
         
-    def update(self, werewolf): 
-        if(self.danger):
+    def update(self, werewolf):
+        dangerFlag = self.danger(werewolf) 
+        if(dangerFlag):
             TD = self.threat_direction(werewolf) 
-            if( (self.currentSprite.rect.x <= 40 or self.currentSprite.rect.x >=600) and 
+            
+            if(self.currentSprite.rect.x <= 40 and self.currentSprite.rect.y <= 40):
+                self.currentSprite.setAnimation(Globals.ANIMATION_MOVE_DOWN)
+                self.currentSprite.update()
+                self.currentSprite.rect.y += self.ySpeed
+                self.currentSprite.setAnimation(Globals.ANIMATION_MOVE_RIGHT)
+                self.currentSprite.update()
+                self.currentSprite.rect.x += self.xSpeed
+            elif(self.currentSprite.rect.x <= 40 and self.currentSprite.rect.y >= 440):
+                self.currentSprite.setAnimation(Globals.ANIMATION_MOVE_UP)
+                self.currentSprite.update()
+                self.currentSprite.rect.y -= self.ySpeed
+                self.currentSprite.setAnimation(Globals.ANIMATION_MOVE_RIGHT)
+                self.currentSprite.update()
+                self.currentSprite.rect.x += self.xSpeed
+            elif(self.currentSprite.rect.y <= 40 and self.currentSprite.rect.x >= 600):
+                self.currentSprite.setAnimation(Globals.ANIMATION_MOVE_DOWN)
+                self.currentSprite.update()
+                self.currentSprite.rect.y += self.ySpeed
+                self.currentSprite.setAnimation(Globals.ANIMATION_MOVE_LEFT)
+                self.currentSprite.update()
+                self.currentSprite.rect.x -= self.xSpeed
+            elif(self.currentSprite.rect.y >= 440 and self.currentSprite.rect.x >= 600):
+                self.currentSprite.setAnimation(Globals.ANIMATION_MOVE_LEFT)
+                self.currentSprite.update()
+                self.currentSprite.rect.x -= self.xSpeed
+                self.currentSprite.setAnimation(Globals.ANIMATION_MOVE_UP)
+                self.currentSprite.update()
+                self.currentSprite.rect.y -= self.ySpeed
+             
+            elif( (self.currentSprite.rect.x <= 40 or self.currentSprite.rect.x >=600) and 
                 (self.currentSprite.rect.y > 40 and self.currentSprite.rect.y < 440) ):
                 if(werewolf.currentSprite.rect.y > self.currentSprite.rect.y):
                     self.currentSprite.setAnimation(Globals.ANIMATION_MOVE_UP)
@@ -80,11 +111,57 @@ class HumanAIPlayer(object):
                 self.currentSprite.setAnimation(Globals.ANIMATION_MOVE_LEFT)
                 self.currentSprite.update()
                 self.currentSprite.rect.x -= self.xSpeed
+        else:
+             randNum = random.randint(1,480)
+             if(randNum == 1):
+                 self.currentSprite.setAnimation(Globals.ANIMATION_MOVE_UP)
+                 self.currentSprite.update()
+                 self.currentSprite.rect.y -= 2 * self.ySpeed
+             elif(randNum == 2):
+                 self.currentSprite.setAnimation(Globals.ANIMATION_MOVE_LEFT)
+                 self.currentSprite.update()
+                 self.currentSprite.rect.x -= 2 * self.xSpeed
+             elif(randNum == 3):
+                 self.currentSprite.setAnimation(Globals.ANIMATION_MOVE_RIGHT)
+                 self.currentSprite.update()
+                 self.currentSprite.rect.x += 2 * self.xSpeed
+             elif(randNum == 4):
+                 self.currentSprite.setAnimation(Globals.ANIMATION_MOVE_DOWN)
+                 self.currentSprite.update()
+                 self.currentSprite.rect.y += 2 * self.ySpeed
+             elif(randNum == 5):
+                 self.currentSprite.setAnimation(Globals.ANIMATION_MOVE_UP)
+                 self.currentSprite.update()
+                 self.currentSprite.rect.y -= 2 * self.ySpeed
+                 self.currentSprite.setAnimation(Globals.ANIMATION_MOVE_LEFT)
+                 self.currentSprite.update()
+                 self.currentSprite.rect.x -= 2 * self.xSpeed
+             elif(randNum == 6):
+                 self.currentSprite.setAnimation(Globals.ANIMATION_MOVE_UP)
+                 self.currentSprite.update()
+                 self.currentSprite.rect.y -= 2 * self.ySpeed
+                 self.currentSprite.setAnimation(Globals.ANIMATION_MOVE_RIGHT)
+                 self.currentSprite.update()
+                 self.currentSprite.rect.x += 2 * self.xSpeed
+             elif(randNum == 7):
+                 self.currentSprite.setAnimation(Globals.ANIMATION_MOVE_LEFT)
+                 self.currentSprite.update()
+                 self.currentSprite.rect.x -= 2 * self.xSpeed
+                 self.currentSprite.setAnimation(Globals.ANIMATION_MOVE_DOWN)
+                 self.currentSprite.update()
+                 self.currentSprite.rect.y += 2 * self.ySpeed
+             elif(randNum == 8):
+                 self.currentSprite.setAnimation(Globals.ANIMATION_MOVE_DOWN)
+                 self.currentSprite.update()
+                 self.currentSprite.rect.y += 2 * self.ySpeed
+                 self.currentSprite.setAnimation(Globals.ANIMATION_MOVE_RIGHT)
+                 self.currentSprite.update()
+                 self.currentSprite.rect.x += 2 * self.xSpeed
     
     def danger(self, werewolf):
-        distance = calculateDistance(self, werewolf)
-        if (distance < 150000):
-            self.danger = True
+        distance = self.calculateDistance(werewolf)
+        if (distance < 150):
+            return True
         
     def threat_direction(self, werewolf):
         if(werewolf.currentSprite.rect.x == self.currentSprite.rect.x and 
