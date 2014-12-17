@@ -17,12 +17,13 @@ class WerewolfTagClient:
     frameRate = 60
     screenWidth = 640
     screenHeight = 480
-    fullScreen = True
+    fullScreen = False
     currentState = GameState.GAME
     
     def __init__(self):
         pygame.init()
         self.window = self.display.set_mode([self.screenWidth, self.screenHeight], pygame.FULLSCREEN if self.fullScreen else pygame.RESIZABLE)
+        self.display.set_caption("Werewolf Tag Training Mode")
         pygame.mouse.set_visible(False)
         self.mixer.init()
         self.game = Game(self)
