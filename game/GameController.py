@@ -79,6 +79,9 @@ class GameController():
                         if not player.is_it and not player.transforming:
                             player.increase_score(1)
                         if player.transforming:
+                            # update player transforming animation
+                            player.on_transforming()
+                            
                             if time.time() >= player.transform_complete:
                                 player.finish_transform()
 

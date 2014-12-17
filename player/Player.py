@@ -3,6 +3,7 @@
 #
 import time
 import pygame
+from base import Globals
 from player.Human import Human
 from player.Werewolf import Werewolf
 
@@ -101,6 +102,15 @@ class Player(object):
     def start_transform(self):
         self.transforming = True
         self.transform_complete = time.time() + 3
+        # set transformation animation
+        self.currentSprite.setAnimation(Globals.ANIMATION_TRANSFORM)
+        self.currentSprite.update()
+
+    #
+    # upate sprite on transforming
+    #
+    def on_transforming(self):
+        self.currentSprite.update()
 
     # completes the werewolf transformation, should be called only
     # when the global/main clock notices that 3+ seconds have
@@ -109,6 +119,10 @@ class Player(object):
         self.transforming = False
         self.is_it = True
         self.transform_counter = 0
+        
+        # stop transformation animation
+        self.currentSprite.setAnimation(Globals.ANIMATION_MOVE_DOWN)
+        self.currentSprite.update()
 
     #
     # is player it?
@@ -202,6 +216,7 @@ class Player(object):
         
         # update current sprite
         self.currentSprite = swapSprite
+        self.currentSprite.currentFrame = 0
         self.currentSprite.rect.x = prevX
         self.currentSprite.rect.y = prevY
     #
