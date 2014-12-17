@@ -3,7 +3,7 @@ WINDOW_WIDTH = 640
 WINDOW_HEIGHT = 480
 WINDOW_FULLSCREEN = False
 
-#Board Properties
+# Board Properties
 BORDER_WIDTH = 640
 BORDER_HEIGHT = 440
 
@@ -19,6 +19,7 @@ SPRITE_FILEPATH_HAMMER = "assets/sprites/hammer.png"
 SPRITE_FILEPATH_SHOVEL = "assets/sprites/shovel.png"
 SPRITE_FILEPATH_HOLE = "assets/sprites/hole.png"
 SPRITE_FILEPATH_BARN = "assets/sprites/barn.png"
+SPRITE_FILEPATH_GAMEBACKGROUD = "assets/sprites/gamebackground.png"
 
 
 # Directions States
