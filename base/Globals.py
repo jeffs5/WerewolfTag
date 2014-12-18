@@ -1,14 +1,14 @@
 # Window Properties
 WINDOW_WIDTH = 640
 WINDOW_HEIGHT = 480
-WINDOW_FULLSCREEN = True
+WINDOW_FULLSCREEN = False
 
 # Board Properties
 BORDER_WIDTH = 640
 BORDER_HEIGHT = 440
 
 # Network Constants
-NETWORK_HOST = "169.234.8.78"#"localhost" #"169.234.41.252"
+NETWORK_HOST = "169.234.41.252"
 NETWORK_PORT = 8887
 
 # Game Model Properties
