@@ -150,14 +150,16 @@ class Player(object):
         for border in borders:
             if self.currentSprite.rect.colliderect(border):
                 collide = True
-                if dx > 0:
-                    self.currentSprite.rect.right = border.left
-                if dx < 0:
-                    self.currentSprite.rect.left = border.right
-                if dy > 0:
-                    self.currentSprite.rect.bottom = border.top
-                if dy < 0:
-                    self.currentSprite.rect.top = border.bottom
+                self.currentSprite.rect.x-=dx
+                self.currentSprite.rect.y-=dy
+                #if dx > 0:
+                 #   self.currentSprite.rect.right = border.left
+               # if dx < 0:
+                #    self.currentSprite.rect.left = border.right
+                #if dy > 0:
+                   # self.currentSprite.rect.bottom = border.top
+                #if dy < 0:
+               #     self.currentSprite.rect.top = border.bottom
 
         for player in players:
             if self != player:
